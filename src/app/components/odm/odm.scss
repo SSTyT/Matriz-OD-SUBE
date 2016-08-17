@@ -1,0 +1,34 @@
+section{
+	background:#FDD306;
+	height:100%;
+
+
+	#map{
+		height:100%;
+		width: 100%;
+		position: absolute;
+	    background: url("/assets/images/ba-logo-lema.svg");
+	    background-repeat: no-repeat;
+	    background-size: 50%;
+	    background-position: 50%;
+	}
+
+
+	.left-dock,.right-dock{
+		z-index:100;
+		position:absolute;
+		height: 100%
+	}
+
+	.right-dock{
+		right:0;
+		background:rgba(255,0,0,.3);
+
+	}
+	.left-dock{
+		left:0;
+		background:rgba(255,255,0,.3);
+		width:10%;
+
+	}
+}

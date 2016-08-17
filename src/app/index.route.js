@@ -10,9 +10,9 @@
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'app/main/main.html',
-        controller: 'MainController',
-        controllerAs: 'main'
+        templateUrl: 'app/components/odm/odm.tpl.html',
+        controller: 'ODMController',
+        controllerAs: 'vm'
       });
 
     $urlRouterProvider.otherwise('/');

@@ -1,0 +1,30 @@
+.overlay{
+	outline:red 15px solid;
+	position:absolute;
+	height:100%;
+	width:100%;
+	z-index:1000;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	opacity:0;
+	transition-property: all !important;
+    transition-duration: 1.5s !important;
+    display: none;
+
+	.preloader-wrapper{
+		height: 15%;
+		width: 15%;
+		background: red;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+
+		.preloader{}
+	}
+
+	&.active{
+		opacity:1;
+	}
+}
+

@@ -8,19 +8,17 @@
 
 		</div>
 		<ul class="destination-list">
-			<li class=" destination-item">
-				<div class="destination-title">
-					
-				</div>
+			<li class="destination-item" ng-repeat="record in matrix.model track by $index" ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight()">
+				
 				<div class="destination-info">
 					<span class="highlight">
-						8888888
+							{{record.depto_origen}}
 					</span>
 					<span class="resume">
 						
-						<span class="tren">111111111</span>
-						<span class="coelctivo">222222222</span>
-						<span class="subte">33333333</span>
+						<span class="tren">		{{record.cantidad_tren}}</span>
+						<span class="coelctivo">{{record.cantidad_bus}}</span>
+						<span class="subte">{{record.cantidad_subte}}</span>
 
 
 					</span>

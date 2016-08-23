@@ -41,14 +41,14 @@ html,body,ui-view{
 .leaflet-tile{
 	opacity:0;
     transition-property: all !important;
-    transition-duration: 1s !important;
-   transform: scale(.0)!important;
+    transition-duration: 1.5s !important;
+  // transform: scale(.0)!important;
 }
 
 
 .leaflet-tile-loaded{
 	opacity:1;
-   transform: scale(1)!important;
+  // transform: scale(1)!important;
 }
 
 /**

@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('matrizOdSube').directive('odMap', ['$timeout','DataOrigin', odMap]);
+angular.module('matrizOdSube').directive('odMap', ['$timeout','$q','LeafletServices','DataOrigin', odMap]);
 
-function odMap($timeout,DataOrigin) {
+function odMap($timeout,$q,LeafletServices,DataOrigin) {
     // Runs during compile
     console.log("directive odMap compiled");
     return {
@@ -13,59 +13,49 @@ function odMap($timeout,DataOrigin) {
 
         link: function($scope, iElm, iAttrs) {
 
+           // LeafletServices.initMap().then(mapHandler);
 
+            var promises = [
+                LeafletServices.initMap(),
+                DataOrigin.getZonas(),
+                DataOrigin.getODData()
+            ];
 
-			//$scope.preloader.show();
+            $q.all(promises).then(function(values){
+                console.log(values);
+                mapHandler(values[0]);
+                drawPolygons(values[1]);
+                drawMatrix(values[2]);
 
-            var OSM = L.tileLayer.provider('OpenStreetMap.HOT');
-
-            var map = L.map('map', {
-                zoomControl: false,
-                center: [-34.6192103, -58.429606],
-                layers: OSM,
-                zoom: 12
             });
 
-            $scope.map = {
-                model: map,
-                center: "-34.628767838201036,-58.542341058691335",
-                active: false,
-                reCenter: function() {
-                    $scope.map.model.setCenter($scope.map.center);
+            function mapHandler(leMap){
+                $scope.map = {
+                    model: leMap,
+                    center: "-34.628767838201036,-58.542341058691335",
+                    active: false,
+                    reCenter: function() {
+                        $scope.map.model.setCenter($scope.map.center);
+                    }
+                };                
+                $scope.map.model.setView({ 'lat': parseFloat('-34.628767838201036'), 'lng': parseFloat('-58.542341058691335') }, 12);
+            }
+
+            function drawPolygons(data){
+                data.forEach(pintar);
+                function pintar(e,i){
+                    LeafletServices.drawPoly({geometry:e})
                 }
-            };
-            $scope.map.model.setView({ 'lat': parseFloat('-34.628767838201036'), 'lng': parseFloat('-58.542341058691335') }, 12);
-            $scope.map.setup = function(callBack) {
-                OSM.on("load", function callmeOnce() {
-                    //console.log("all visible tiles have been loaded");
-                    callBack();
-                    OSM.off("load", callmeOnce);
-                });
+            }
 
-
-				//$scope.preloader.hide();
-            };
+            function drawMatrix(data){
+                console.log(data);
+                $scope.matrix.model = data ; 
+            }
 
 
 
-var myStyle = {
-    "color": "#ff7800",
-    "weight": 5,
-    "opacity": 0.65
-}
-            $scope.map.setup(function (){
-
-				DataOrigin.getZonas().then(succesZonas,failZonas);
-				function succesZonas(data){
-					console.log(data.features)
-					L.geoJson(data.features,{style:myStyle}).addTo(map);
-				}
-				function failZonas(data){
-					console.log(data)
-				}
-
-
-            });
+            //$scope.map.setup();
 
 
 

@@ -1,0 +1,29 @@
+footer{
+	display:flex;
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	background:white;
+	z-index:150;
+	align-items:center;
+	
+	.sttyt-logo{
+		// height:1.5em;
+		font-size: 2em;
+		font-weight: bold;
+		padding: 15px;
+		// outline:15px revecaviolet solid;
+		.sub-brand{
+			font-size: .3em;
+			
+		}
+	}
+
+	.brand-logo{
+		width: 20vw;
+		min-height: 5vw;
+		//outline:15px solid red;
+
+	}
+}

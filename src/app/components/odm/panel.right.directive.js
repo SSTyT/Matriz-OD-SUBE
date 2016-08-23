@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('matrizOdSube').directive('odRightPanel', ['$timeout', odRightPanel]);
+angular.module('matrizOdSube').directive('odRightPanel', ['$timeout','DataOrigin', odRightPanel]);
 
-function odRightPanel($timeout) {
+function odRightPanel($timeout,DataOrigin) {
     // Runs during compile
     console.log("directive odRightPanel compiled");
     return {
@@ -13,15 +13,9 @@ function odRightPanel($timeout) {
 
         link: function($scope, iElm, iAttrs) {
 
-            $scope.preloder = {
-                active : false , 
-                show : function (){
-                    $scope.preloder.active = true;
-                },
-                hide : function (){
-                    $scope.preloder.active = false; 
-                }
-            } ;
+        $scope.matrix = {
+            model : {}
+        } ; 
 
 
             console.log("directive odRightPanel linked");

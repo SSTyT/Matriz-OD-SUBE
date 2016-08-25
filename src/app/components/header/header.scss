@@ -1,0 +1,40 @@
+.header{
+	font-family: 'Gotham';
+	position: absolute;
+    z-index: 1000;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+	color:#1D1C1A;
+	background:#FDD306;
+	padding: .5em 3em;
+    
+    .title{
+    	font-size: 3em;
+    	font-weight: bold;
+    }
+    
+    .sub-title{
+		font-size: 1em;
+    }
+}
+
+// .header{
+// 	font-family: 'Gotham';
+// 	position: absolute;
+//     z-index: 1000;
+//     left: 50%;
+//     transform: translate(-50%);
+//     text-align: center;
+//     color:white;
+//     background: 
+//     .title{
+//     	font-size: 6em;
+//     	font-weight: bold;
+
+//     }
+//     .sub-title{
+// 		font-size: 3em;
+
+//     }
+// }

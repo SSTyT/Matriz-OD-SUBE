@@ -50,7 +50,7 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
 
             function drawMatrix(data){
                 console.log(data);
-                $scope.matrix.model = data ; 
+                $scope.model = data ; 
             }
 
 

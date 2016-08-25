@@ -13,7 +13,7 @@ function brandFooter($timeout) {
 
         link: function($scope, iElm, iAttrs) {
 
-
+            
 
 
             console.log("directive brandFooter linked");

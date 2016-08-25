@@ -1,39 +1,89 @@
 section{
 	background:#FDD306;
 	height:100%;
-	   background: url("/assets/images/ba-logo-lema.svg");
-	    background-repeat: no-repeat;
-	    background-size: 50%;
-	    background-position: 50%;
+	background: url("/assets/images/ba-logo-lema.svg");
+	background-repeat: no-repeat;
+	background-size: 50%;
+	background-position: 50%;
 
 	#map{
 		height:100%;
 		width: 100%;
 		position: absolute;
-	 
 	}
 
-
 	.left-dock,.right-dock{
+		font-family: 'Gotham';
 		z-index:100;
 		position:absolute;
-		height: 100%
-    transition-property: all;
-    transition-duration: .5s;
-		
+		height: 100%;
+   		transition-property: all;
+    	transition-duration: .5s;
+    	min-width: 10vw;
+
+    	display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    .flipper{
+			min-width: 10vw;
+			height:100%;	    	
+	    }
+		.right-panel,.left-panel{
+			// padding:.5em;
+			max-height: 80vh;
+			background: #F2F0ED;
+			.panel-top{
+				height: 1em;
+				width: 100%;
+				background:#FDD306;
+			}
+			.panel-title{
+
+				color:#1D1C1A;
+				padding:1em 1.5em;
+				font-size: 1.4em;
+				letter-spacing: .1em;
+			}
+			.panel-line{
+				height: 3px;
+				width: 98%;
+				margin: .25em auto;
+				background: -prefix-linear-gradient(left, #FDD306, #00B9F1); 
+				background: linear-gradient(to right,#FDD306, #00B9F1);
+				border-radius:5px;
+			}
+
+			.origin-list,.destination-list{
+				list-style: none;
+				padding:.5em;
+				overflow-y: scroll;
+				max-height: 70vh;
+				background: #F2F0ED;
+				.origin-item-wrapper{}
+			}
+
+			.origin-list{}
+			.destination-list{}
+
+
+		}
 	}
 
 	.right-dock{
-		right:0;
-		overflow-y: scroll;
-
-		background:rgba(255,0,0,.3);
-
+		right:1em;
+		
+		.right-panel{
+			// background:rgba(255,0,0,1);
+		}
 	}
-	.left-dock{
-		left:0;
-		background:rgba(255,255,0,.1);
-		width:5%;
 
+	.left-dock{
+		left:1em;
+
+		.left-panel{
+			// background:rgba(255,255,0,1);
+		}
 	}
 }
+
+

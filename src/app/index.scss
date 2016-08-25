@@ -12,6 +12,19 @@ $icon-font-path: "../../bootstrap-sass/assets/fonts/bootstrap/";
 // bower:scss
 // endbower
 
+
+
+@font-face {
+  font-family: "Gotham";
+  src: url("../assets/fonts/gotham.eot");
+  src: url("../assets/fonts/gotham.eot?#iefix") format("embedded-opentype"), 
+       url("../assets/fonts/gotham.svg#Gotham") format("svg"), 
+       url("../assets/fonts/gotham.woff") format("woff"), 
+       url("../assets/fonts/gotham.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; 
+}
+
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
@@ -57,3 +70,49 @@ html,body,ui-view{
  */
 // injector
 // endinjector
+
+
+
+
+
+/* entire container, keeps perspective */
+.flip-container {
+  perspective: 1000px;
+}
+  /* flip the pane when hovered */
+  .flip-container.flipped .flipper, .flip-container.hover .flipper {
+    transform: rotateY(180deg);
+  }
+
+.flip-container, .front, .back {
+
+}
+
+/* flip speed goes here */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+
+  position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+  backface-visibility: hidden;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+  z-index: 2;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+  transform: rotateY(180deg);
+}

@@ -1,0 +1,114 @@
+.odm-record{
+	//outline:2px solid red;
+	    width: 20em;
+
+	.departures,
+	.transboarding,
+	.social-attribute{
+		width: 100%
+	}
+
+	.departures{
+		outline: 1px dotted violet;
+		display: flex;
+		flex-direction:row;
+		.department{
+			font-size: 1.5em;
+			width: 30%;
+			text-align: center;
+		}
+		.resume{
+			width: 70%;
+		
+			.record-value{
+				width: 100%;
+				position: relative;
+				display: flex;
+				flex-direction: row;
+				font-size: 0;
+				.background{
+					width: 100%;
+				
+					padding-left: 3px;
+				    border-bottom: transparent 8px solid;
+				    -webkit-transition: all .3s; /* Safari */
+    				transition: all .3s;
+				}
+				.value{
+					width:0;
+				}
+
+
+
+			}
+			.record-value:hover{
+				width: 100%;
+				position: relative;
+				display: flex;
+				flex-direction: row;
+				font-size: .7em;
+				.background{
+					width: 100%;
+		
+					padding-left: 3px;
+				    border-bottom: transparent 8px solid;
+
+				}
+				.value{
+					min-width: 5em;
+				}
+
+
+
+			}
+			.record-value.tren{
+				.background{
+					 border-bottom-color:#6dc48c;
+
+				};
+			}
+			.record-value.colectivo{
+				.background{
+					border-bottom-color:green;}
+			}
+			.record-value.subte{
+				.background{
+					border-bottom-color:blue;
+				}
+			}
+			.record-value.total{
+				.background{
+					border-bottom-color:red;
+					}
+				}
+		}
+	}
+	.transboarding{
+		font-size: .7em;
+		.current{
+
+			.background{}
+			.value{}
+		}
+
+		.media{
+			.background{}
+			.value{}
+		}
+	}
+
+	.social-attribute{
+		font-size: .7em;
+		.current{
+
+			.background{}
+			.value{}
+		}
+
+		.media{
+			.background{}
+			.value{}
+		}
+	}
+
+}

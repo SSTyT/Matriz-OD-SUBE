@@ -9,9 +9,20 @@ function leafletServices($http,$q){
 	self.map;
 	self.polygons = [] ;
 
-
+/*
+    stroke: rgba(91, 147, 61, 0.8);
+    stroke-opacity: 0.75;
+    stroke-width: 1;
+    fill: rgba(91, 147, 61, 0.8);
+    fill-opacity: 0.2;
+*/
 
 	self.highlightStyle = {
+		// origin : {
+		// 	color: 'rgb(0,0,0)',
+		// 	opacity: 1 ,
+		// 	weight: 5 
+		// },
 		origin : {
 			color: 'rgb(0,0,0)',
 			opacity: 1 ,
@@ -37,9 +48,9 @@ function leafletServices($http,$q){
     function genStyle(){
         function randomChannel(){return parseInt((Math.random()*255));}
         var myStyle = {
-            "color": "rgba("+randomChannel()+","+randomChannel()+","+randomChannel()+",.8)",
+            "color": "rgba("+randomChannel()+","+randomChannel()+","+randomChannel()+",1)",
             "weight": 1,
-            "opacity": 0.75
+            "opacity": 0.95
         }
         return myStyle;
     }
@@ -67,8 +78,6 @@ function leafletServices($http,$q){
 
 
 	function Polygon(data){
-
-
 
 		this.style = genStyle(); 
 		this.polygon = L.geoJson(data.geometry,{
@@ -99,11 +108,7 @@ function leafletServices($http,$q){
 		
 		self.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data) ;
 
-
-
-
-
-		console.log("polygon: "+ data.geometry.properties.depto+ "    added");
+		//console.log("polygon: "+ data.geometry.properties.depto+ "    added");
  		//L.circleMarker(polygon.getBounds().getCenter()).bindLabel( data.properties, {noHide:true}).addTo(self.map);
 		//polygon.bindLabel()
 		 //label = new L.Label(data.geometry.properties.depto).addTo(self.map);

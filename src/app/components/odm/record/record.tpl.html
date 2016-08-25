@@ -1,0 +1,50 @@
+<div class='odm-record'>
+	<div class='departures'>
+		<span class='department'>
+			<div>
+				{{record.departamento}}
+			</div>
+			<div ng-click="vm.open(record.departamento)">
+				VER	
+			</div>
+		</span>
+		<span class='resume'>
+			<div class="record-value tren">
+				<div class='value'>Tren<span> {{record.porcentaje.tren}} %</span></div>
+				<div class='background' ng-style="{width:record.porcentaje.tren}"></div>
+			</div>
+			<div class="record-value colectivo">
+				<div class='value'>Colectivo  {{record.porcentaje.colectivo}} %</span></div>
+				<div class='background'  ng-style="{width:record.porcentaje.colectivo}"></div>
+			</div>
+			<div class="record-value subte">
+				<div class='value'>Subte  {{record.porcentaje.subte}} %</span></div>
+				<div class='background' ng-style="{width:record.porcentaje.subte}"></div>
+			</div>
+			<div class="record-value total">
+				<div class='value'>Total {{record.total}} %</span> </div>
+				<div class='background' ng-style="{width:record.porcentaje.total}"> </div>
+			</div>
+		</span>
+	</div>
+	<div class='transboarding'>
+		<div class='current'>
+			<div class="background"></div>
+			<div class="value">{{record.transbordo}}</div>
+		</div>
+		<div class='media-value'>
+			<div class="background"></div>
+			<div class="value">{{model.medias.transbordo}}</div>
+		</div>
+	</div>
+	<div class='social-attribute'>
+		<div class='current'>
+			<div class="background"></div>
+			<div class="value"> {{record.atributo}}</div>
+		</div>
+		<div class='media-value'>
+			<div class="background"></div>
+			<div class="value">{{model.medias.atributo}}</div>
+		</div>
+	</div>
+</div>

@@ -44,7 +44,10 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
             function drawPolygons(data){
                 data.forEach(pintar);
                 function pintar(e,i){
-                    LeafletServices.drawPoly({geometry:e})
+                    LeafletServices.drawPoly({
+                        geometry:e,
+                        style : DataOrigin.record[parseInt(e.properties.depto)].style
+                    });
                 }
             }
 

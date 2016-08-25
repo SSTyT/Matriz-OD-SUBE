@@ -10,7 +10,7 @@
 		</div>
 		<div class="panel-line"></div>
 		<ul class="origin-list">
-			<li ng-if="{model.matriz.length==0}">CARGANDO</li>
+			<li ng-if="model.matriz.length==0">CARGANDO</li>
 			<li class="origin-item-wrapper" ng-repeat="record in model.matriz track by $index" ng-click="open(record.departamento)" ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight()">
 				<od-record id="{{record.departamento}}" value="{{record.depto}}" ></od-record>
 			</li>

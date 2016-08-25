@@ -79,7 +79,7 @@ function leafletServices($http,$q){
 
 	function Polygon(data){
 
-		this.style = genStyle(); 
+		this.style = data.style; 
 		this.polygon = L.geoJson(data.geometry,{
 			style:this.style,
 		 	className:data.geometry.properties.depto,

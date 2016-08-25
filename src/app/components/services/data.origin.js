@@ -9,7 +9,7 @@ function DataOrigin($http, $q,LeafletServices) {
     //var urlZones  = 'assets/disolve_by_locate_depart.geojson';
     var urlZones  = 'assets/zonas.g.geojson';
     var urlMatriz = 'assets/subedatos.json';
-
+    var bigTable = [] ; 
     var model = {
         matriz : [] ,
         medias : {
@@ -17,29 +17,47 @@ function DataOrigin($http, $q,LeafletServices) {
             transbordo : 0 
         },
         totales:{
-            tren:0,
-            colectivo:0,
-            subte:0,
-            viajes:0,
+            transbordo : 0, 
+            colectivo : 0,
             atributo : 0,
-            transbordo : 0 
-
+            subte : 0,
+            total : 0,
+            tren : 0
+        },
+        max:{
+            colectivo : 0,
+            subte : 0,
+            total : 0,
+            tren : 0
+        },
+        colors:{
+            max : {
+                r:245,
+                g:85,
+                b:54
+            },
+            min : {
+                r:250,
+                g:218,
+                b:156
+            },
+            tren: {
+                r:22,
+                g:186,
+                b:197
+            },
+            colectivo: {
+                r:104,
+                g:216,
+                b:214
+            },
+            subte: {
+                r:156,
+                g:234,
+                b:60
+            }
         }
     }
-
-    function sortTheMotherfuckers(data,by){
-        var sorted = [];
-            for (var i = data.features.length - 1; i >= 0; i--) {
-                var clave = data.features[i].properties[by];
-                if ( sorted[clave] == undefined){
-                    sorted[clave] = [] ; 
-                }
-                sorted[clave].push(data.features[i])
-            }
-        return sorted;
-    }
-
-
 
     var ODRegister = function (data){
         this.atributo = data.cantidad_as ;
@@ -58,7 +76,7 @@ function DataOrigin($http, $q,LeafletServices) {
 
         //this.detail = [] ; 
         //this.detail.push(data);
-        this.originalStyle = {};
+        this.style = {};
         this.destinations = [] ;
         this.destinations[data.depto_destino] = 0 ;
 
@@ -107,22 +125,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
 
     function cookOD(data){
-        var bigTable = [] ; 
-        var model = {
-            matriz :[],
-            medias :{
-                transbordo:0,
-                atributo:0,
-            },
-            totales:{
-                transbordo:0,
-                atributo:0,
-                colectivo:0,
-                subte:0,
-                tren:0,
-                total:0
-            }
-        };
+      
+
 
         data.forEach( function(element, index) {
             if (bigTable[element.depto_origen] ==  undefined) { 
@@ -149,21 +153,56 @@ function DataOrigin($http, $q,LeafletServices) {
             model.totales.total += element.total;
         }
 
-        model.matriz.forEach(setPorentajes);
-        function setPorentajes(element,index){
-            this.total_porcentaje = (element.total*100)/model.totales.total  ;
+        model.matriz.forEach(recorrer);
+
+        function storeMax(key,element){
+            if(model.max[key] < element[key]){
+                model.max[key] = element[key]
+            }
+        }
+
+        function recorrer(element,index){
+            this.total_porcentaje = (element.total*100)/model.totales.total;
+
+            storeMax('total',element);
+            storeMax('subte',element);
+            storeMax('colectivo',element);
+            storeMax('tren',element);
+
+
         }
 
         //calcular medias
         model.medias.atributo = parseInt( model.totales.atributo / model.matriz.length);
         model.medias.transbordo = parseInt (model.totales.transbordo / model.matriz.length);
         
+
+        //calcular el color de cada depto en funcion de su valor total de viajes 
+        model.matriz.forEach(paintRecord);
+        function calcTotalColor(param){
+            var r = parseInt(param.map(0,model.max.total,model.colors.min.r,model.colors.max.r));
+            var g = parseInt(param.map(0,model.max.total,model.colors.min.g,model.colors.max.g));
+            var b = parseInt(param.map(0,model.max.total,model.colors.min.b,model.colors.max.b));
+            return 'rgb('+r+','+g+','+b+')';
+        }
+        function paintRecord(element,index){
+
+            element.style = {
+                weight: 1,
+                color: calcTotalColor(element.total),
+                fillOpacity: 0.85
+            };
+
+        };
+
         //ordenar por totales la matriz
         model.matriz.sort(compareFunction)
         function compareFunction(a,b){
             return b.total - a.total ;
         }
 
+
+        console.log(model);
         return model ; 
     }
 
@@ -188,7 +227,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
     return {
         getODData : getODData,
-        getZonas : getZonas 
+        getZonas : getZonas,
+        record : bigTable
     };
 }
 

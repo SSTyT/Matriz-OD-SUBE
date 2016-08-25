@@ -49,31 +49,26 @@
 				font-size: .7em;
 				.background{
 					width: 100%;
-		
 					padding-left: 3px;
 				    border-bottom: transparent 8px solid;
-
 				}
 				.value{
 					min-width: 5em;
 				}
-
-
-
 			}
 			.record-value.tren{
 				.background{
-					 border-bottom-color:#6dc48c;
-
+					 border-bottom-color:rgb(22,186,197);
 				};
 			}
 			.record-value.colectivo{
 				.background{
-					border-bottom-color:green;}
+					border-bottom-color:rgb(104,216,214);
+				}
 			}
 			.record-value.subte{
 				.background{
-					border-bottom-color:blue;
+					border-bottom-color:rgb(156,234,60);
 				}
 			}
 			.record-value.total{

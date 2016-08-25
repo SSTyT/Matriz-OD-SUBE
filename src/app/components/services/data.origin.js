@@ -107,11 +107,14 @@ function DataOrigin($http, $q,LeafletServices) {
         // }
 
         this.highlight = function () {
+
             console.log("highlight" + this.departamento);
             this.destinations.forEach( function(index,element) {
                 LeafletServices.polygons[element].highlight('destination');
             });
             LeafletServices.polygons[this.departamento].highlight('origin');
+            LeafletServices.polygons[this.departamento].focus();
+
         }
 
         this.unHighlight = function () {
@@ -188,9 +191,10 @@ function DataOrigin($http, $q,LeafletServices) {
         function paintRecord(element,index){
 
             element.style = {
-                weight: 1,
+                weight: 2,
                 color: calcTotalColor(element.total),
-                fillOpacity: 0.85
+                fillOpacity: 0.85,
+                strokeOpacity:1
             };
 
         };

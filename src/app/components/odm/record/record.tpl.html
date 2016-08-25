@@ -1,7 +1,7 @@
 <div class='odm-record'>
 	<div class='departures'>
 		<span class='department'>
-			<div>
+			<div  ng-style={background:record.style.color}>
 				{{record.departamento}}
 			</div>
 			<div ng-click="vm.open(record.departamento)">
@@ -21,10 +21,10 @@
 				<div class='value'>Subte  {{record.porcentaje.subte}} %</span></div>
 				<div class='background' ng-style="{width:record.porcentaje.subte}"></div>
 			</div>
-			<div class="record-value total">
+<!-- 			<div class="record-value total">
 				<div class='value'>Total {{record.total}}</span> </div>
 				<div class='background' ng-style="{width:record.porcentaje.total}"> </div>
-			</div>
+			</div> -->
 		</span>
 	</div>
 	<div class='transboarding'>

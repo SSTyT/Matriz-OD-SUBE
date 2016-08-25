@@ -12,6 +12,14 @@ section{
 		position: absolute;
 	}
 
+
+
+path.departamento{
+	transition-property:color stroke-color background;
+	transition-duration:1s;	
+}
+
+
 	.left-dock,.right-dock{
 		font-family: 'Gotham';
 		z-index:100;

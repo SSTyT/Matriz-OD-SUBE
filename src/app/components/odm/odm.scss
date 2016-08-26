@@ -19,6 +19,13 @@ path.departamento{
 	transition-duration:1s;	
 }
 
+path.departamento:hover{
+	stroke:white;
+	stroke-width:4;
+	fill-opacity:1;
+
+	}
+
 
 	.left-dock,.right-dock{
 		font-family: 'Gotham';
@@ -27,7 +34,7 @@ path.departamento{
 		height: 100%;
    		transition-property: all;
     	transition-duration: .5s;
-    	min-width: 10vw;
+    	min-width: 15vw;
 
     	display: flex;
 	    align-items: center;

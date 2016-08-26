@@ -1,4 +1,5 @@
-angular.module('matrizOdSube').factory('DataOrigin', ['$http', '$q','LeafletServices',DataOrigin])
+'use strict';
+angular.module('matrizOdSube').factory('DataOrigin', ['$http', '$q','LeafletServices',DataOrigin]);
 
 
 function DataOrigin($http, $q,LeafletServices) {
@@ -57,7 +58,49 @@ function DataOrigin($http, $q,LeafletServices) {
                 b:60
             }
         }
-    }
+    };
+
+
+
+
+    var RegisterDetail = function (){
+
+
+        function DestinationRegister (data){
+
+            this.atributo = data.cantidad_as ;
+            this.colectivo = data.cantidad_bus ;
+            this.subte = data.cantidad_subte ;
+            this.transbordo = data.cantidad_transbordo ;
+            this.tren = data.cantidad_tren ;
+            this.total =  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
+    
+            this.add = function (data){
+                this.atributo += data.cantidad_as ;
+                this.colectivo += data.cantidad_bus ;
+                this.subte += data.cantidad_subte ;
+                this.transbordo += data.cantidad_transbordo ;
+                this.tren += data.cantidad_tren ;
+                this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
+                this.destinations[data.depto_destino] =  0 ;
+                
+                
+            };
+
+        }
+
+        this.destinations = [];
+        this.destinationID = [];
+        this.update = function (data){
+                if (this.destination[data.depto_destino] === undefined){
+                    this.destination[data.depto_destino] = new DestinationRegister(data);
+                    
+                }
+                else{
+                    this.destination[data.depto_destino].add(data);
+               }
+       };
+    };
 
     var ODRegister = function (data){
         this.atributo = data.cantidad_as ;
@@ -77,6 +120,10 @@ function DataOrigin($http, $q,LeafletServices) {
         //this.detail = [] ; 
         //this.detail.push(data);
         this.style = {};
+
+        this.detail = new RegisterDetail();
+
+
         this.destinations = [] ;
         this.destinations[data.depto_destino] = 0 ;
 
@@ -89,7 +136,7 @@ function DataOrigin($http, $q,LeafletServices) {
             this.porcentaje.tren = parseInt(this.tren*100/this.total);
             this.porcentaje.colectivo = parseInt(this.colectivo*100/this.total);
             this.porcentaje.subte = parseInt(this.subte*100/this.total);
-        }
+        };
         //this.updatePorcentajes();
         this.add = function (data){
             this.atributo += data.cantidad_as ;
@@ -101,27 +148,33 @@ function DataOrigin($http, $q,LeafletServices) {
             this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
             this.destinations[data.depto_destino] =  0 ;
             this.updatePorcentajes();
-        }
+
+           // this.updateDetail(data){}
+        };
         // this.setPorcentaje = function(key,value){
         //     this.porcentaje[key] = value;
         // }
 
+
+        //comportamiento
         this.highlight = function () {
-            console.log("highlight" + this.departamento);
+            //console.log("highlight" + this.departamento);
             this.destinations.forEach( function(index,element) {
                 LeafletServices.polygons[element].highlight('destination');
             });
             LeafletServices.polygons[this.departamento].highlight('origin');
-        }
+            // LeafletServices.polygons[this.departamento].focus();
+
+        };
 
         this.unHighlight = function () {
             this.destinations.forEach( function(index,element) {
                 LeafletServices.polygons[element].unHighlight();
             });
             LeafletServices.polygons[this.departamento].unHighlight();
-        }
+        };
 
-    }
+    };
 
 
     function cookOD(data){
@@ -159,10 +212,10 @@ function DataOrigin($http, $q,LeafletServices) {
             if(model.max[key] < element[key]){
                 model.max[key] = element[key]
             }
-        }
+        };
 
         function recorrer(element,index){
-            this.total_porcentaje = (element.total*100)/model.totales.total;
+            element.total_porcentaje = (element.total*100)/model.totales.total;
 
             storeMax('total',element);
             storeMax('subte',element);
@@ -170,7 +223,7 @@ function DataOrigin($http, $q,LeafletServices) {
             storeMax('tren',element);
 
 
-        }
+        };
 
         //calcular medias
         model.medias.atributo = parseInt( model.totales.atributo / model.matriz.length);
@@ -184,13 +237,15 @@ function DataOrigin($http, $q,LeafletServices) {
             var g = parseInt(param.map(0,model.max.total,model.colors.min.g,model.colors.max.g));
             var b = parseInt(param.map(0,model.max.total,model.colors.min.b,model.colors.max.b));
             return 'rgb('+r+','+g+','+b+')';
-        }
+        };
+
         function paintRecord(element,index){
 
             element.style = {
-                weight: 1,
+                weight: 2,
                 color: calcTotalColor(element.total),
-                fillOpacity: 0.85
+                fillOpacity: 0.85,
+                strokeOpacity:1
             };
 
         };
@@ -199,12 +254,12 @@ function DataOrigin($http, $q,LeafletServices) {
         model.matriz.sort(compareFunction)
         function compareFunction(a,b){
             return b.total - a.total ;
-        }
+        };
 
 
         console.log(model);
         return model ; 
-    }
+    };
 
     function getODData() {
         var promise = $q(function(success, reject) {
@@ -213,7 +268,7 @@ function DataOrigin($http, $q,LeafletServices) {
                 });
         });
         return promise;
-    }
+    };
 
     function getZonas(){
         var promise = $q(function(success, reject) {
@@ -223,7 +278,7 @@ function DataOrigin($http, $q,LeafletServices) {
                 });
         });
         return promise;
-    }
+    };
 
     return {
         getODData : getODData,

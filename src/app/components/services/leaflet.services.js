@@ -45,20 +45,21 @@ function leafletServices($http,$q){
 		return self.OSM;
 	}
 
-    function genStyle(){
-        function randomChannel(){return parseInt((Math.random()*255));}
-        var myStyle = {
-            "color": "rgba("+randomChannel()+","+randomChannel()+","+randomChannel()+",1)",
-            "weight": 1,
-            "opacity": 0.95
-        }
-        return myStyle;
-    }
+    // function genStyle(){
+    //     function randomChannel(){return parseInt((Math.random()*255));}
+    //     var myStyle = {
+    //         "color": "rgba("+randomChannel()+","+randomChannel()+","+randomChannel()+",1)",
+    //         "weight": 1,
+    //         "opacity": 0.95
+    //     }
+    //     return myStyle;
+    // }
 
 	function initMap(data){
 
 		var promise = $q(function (success,fail){
-            self.OSM = L.tileLayer.provider('OpenStreetMap.HOT');
+            //self.OSM = L.tileLayer.provider('OpenStreetMap.HOT');
+            self.OSM = L.tileLayer.provider('OpenStreetMap');
             self.map = L.map('map', {
                 zoomControl: false,
                 center: [-34.6192103, -58.429606],
@@ -82,7 +83,7 @@ function leafletServices($http,$q){
 		this.style = data.style; 
 		this.polygon = L.geoJson(data.geometry,{
 			style:this.style,
-		 	className:data.geometry.properties.depto,
+		 	className:data.geometry.properties.depto+" departamento",
  		  	onEachFeature: function (feature, layer) {
 
 					//.bindLabel('Look revealing label!')
@@ -94,6 +95,14 @@ function leafletServices($http,$q){
 				}
 		}).addTo(self.map);
 
+
+		this.focus = function () {
+
+			self.map.fitBounds(this.polygon.getBounds());
+
+       		//self.map.setView(this.polygon.getBounds().getCenter());
+			self.map.zoomOut();
+		}
 		this.highlight = function (type) {
             this.polygon.setStyle(self.highlightStyle[type]);
 		}

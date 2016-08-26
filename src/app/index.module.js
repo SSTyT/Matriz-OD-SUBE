@@ -2,6 +2,6 @@
   'use strict';
 
   angular
-    .module('matrizOdSube', [ 'ngResource', 'ui.router' ]);
+    .module('matrizOdSube', [ 'ngResource', 'ui.router','nvd3' ]);
 
 })();

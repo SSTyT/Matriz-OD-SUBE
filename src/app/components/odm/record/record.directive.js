@@ -16,7 +16,7 @@ function odRecord($timeout) {
             
            // iAttrs.id ;
 
-            console.log(iAttrs);
+            //console.log(iAttrs);
         }
     };
 }

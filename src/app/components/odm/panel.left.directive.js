@@ -13,15 +13,40 @@ function odLeftPanel($timeout) {
 
         link: function($scope, iElm, iAttrs) {
 
-            $scope.preloder = {
-                active : false , 
-                show : function (){
-                    $scope.preloder.active = true;
-                },
-                hide : function (){
-                    $scope.preloder.active = false; 
+
+            $scope.leftPanel = {
+                setDetail : function (data){
+                    console.log('SET DETAIL !!!')
+                    $scope.current.data.viajes = [
+                      {
+                        key : 'tren',
+                        y : data.porcentaje.tren
+                      },
+                      { 
+                        key : "colectivo",
+                        y : data.porcentaje.colectivo},
+                      { 
+                        key : "subte",
+                        y : data.porcentaje.subte}
+                    ];
+
+                    $scope.current.data.transbordo =  {
+                        "ranges":[$scope.model.min.transbordo,$scope.model.medias.transbordo,$scope.model.max.transbordo],  //Minimum, mean and maximum values.
+                        "measures":[data.transbordo],        //Value representing current measurement (the thick blue line in the example)
+                        "markers":[data.transbordo]          //Place a marker on the chart (the white triangle marker)
+                      };
+                    $scope.current.data.atributo ={
+                        "ranges":[$scope.model.min.atributo,$scope.model.medias.atributo,$scope.model.max.atributo],  //Minimum, mean and maximum values.
+                        "measures":[data.atributo],        //Value representing current measurement (the thick blue line in the example)
+                        "markers":[data.atributo]          //Place a marker on the chart (the white triangle marker)
+                      };
                 }
-            } ;
+            };
+
+
+
+
+
 
 
             console.log("directive odLeftPanel linked");

@@ -20,60 +20,12 @@
           }
         };
 
-
-
       $scope.current = {
-        options : {
-          chart: {
-              type: 'pieChart',
-              height:500,
-              x: function(d){return d.key;},
-              y: function(d){return d.y;},
-              showLabels: true,
-              duration: 500,
-              labelThreshold: 0.01,
-              labelSunbeamLayout: true,
-              legend: {
-                  margin: {
-                      top: 5,
-                      right: 35,
-                      bottom: 5,
-                      left: 0
-                  }
-              }
-          }
-      },
-        data : [
-          {
-              key: "One",
-              y: 5
-          },
-          {
-              key: "Two",
-              y: 2
-          },
-          {
-              key: "Three",
-              y: 9
-          },
-          {
-              key: "Four",
-              y: 7
-          },
-          {
-              key: "Five",
-              y: 4
-          },
-          {
-              key: "Six",
-              y: 3
-          },
-          {
-              key: "Seven",
-              y: .5
-          }
-      ]        
-    };
+          options :{},
+          data : {}
+      };
+
+
 
         $scope.showDetail = false;
       //load leaflet map centered on ba
@@ -87,8 +39,8 @@
         console.log("Open the mother fucker !!!" + id);
                 $scope.showDetail = true;
 
-                var temp = DataOrigin.record[id];
-                
+                //$scope.current.record = DataOrigin.record[id];
+                $scope.leftPanel.setDetail(DataOrigin.record[id]);
 
                    // $scope.current.options = {
                    //        chart: {
@@ -112,16 +64,13 @@
                    //    };
 
 
-                $scope.current.data = [
-                  {key : 'tren',
-                    y : temp.tren
-                  },
-                  { key : "colectivo",
-                  y : temp.colectivo},
-                  { key : "subte",
-                  y : temp.subte}
-                ];
+
+
+
+
+
                 console.log( $scope.current);
+                  $scope.current.record.highlight();
         //show origin zone at left
         //show destination zones at right panel
         //highlight poligons
@@ -130,6 +79,7 @@
 
       this.close = function (){
                 $scope.showDetail = false;
+                $scope.current.record.unHighlight();
       //hide left pannel content
       //hide right pannel content
       //normalize highlited zones

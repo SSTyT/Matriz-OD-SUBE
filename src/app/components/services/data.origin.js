@@ -9,7 +9,9 @@ function DataOrigin($http, $q,LeafletServices) {
     //var urlZones  = 'assets/zonas.geojson';
     //var urlZones  = 'assets/disolve_by_locate_depart.geojson';
     var urlZones  = 'assets/zonas.g.geojson';
-    var urlMatriz = 'assets/subedatos.json';
+    var urlMatriz = 'assets/salida3.json';
+    //var urlMatriz = 'assets/subedatos.json';
+
     var bigTable = [] ; 
     var model = {
         matriz : [] ,
@@ -29,7 +31,17 @@ function DataOrigin($http, $q,LeafletServices) {
             colectivo : 0,
             subte : 0,
             total : 0,
-            tren : 0
+            tren : 0,
+            atributo : 0,
+            transbordo : 0 
+        },
+        min:{
+            colectivo : 1000000000,
+            subte : 1000000000,
+            total : 1000000000,
+            tren : 1000000000,
+            atributo : 10000000000,
+            transbordo : 10000000000 
         },
         colors:{
             max : {
@@ -60,11 +72,47 @@ function DataOrigin($http, $q,LeafletServices) {
         }
     };
 
+    var hourRegister = function (){
+
+        function oneHour (id) {
+            this.hora = id ;
+            this.total = 0;
+            this.tren = 0;
+            this.subte = 0;
+            this.colectivo = 0;
+            this.asignacion = 0 ;
+            this.transbordo = 0 ;
+
+            this.update =function (data){
+                this.total += data.cantidad_total;
+                this.tren += data.cantidad_tren;
+                this.subte += data.cantidad_subte;
+                this.colectivo += data.cantidad_bus;
+                this.asignacion += data.cantidad_as ;
+                this.transbordo += data.cantidad_transbordo ;
+            }
+        }
+
+        this.horasTable = [] ;
+
+        
+
+        for (var i = 0; i <= 23; i++) {
+            this.horasTable[i] = new oneHour(i);
+        }
 
 
+        this.update = function (data){
+            this.horasTable[data.hora_inicio].update(data);
+        };
+
+        this.getHora(id){
+            return this.horasTable[id];
+        }
+
+    }
 
     var RegisterDetail = function (){
-
 
         function DestinationRegister (data){
 
@@ -81,26 +129,23 @@ function DataOrigin($http, $q,LeafletServices) {
                 this.subte += data.cantidad_subte ;
                 this.transbordo += data.cantidad_transbordo ;
                 this.tren += data.cantidad_tren ;
-                this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
-                this.destinations[data.depto_destino] =  0 ;
-                
-                
+                this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;                
             };
 
         }
-
-        this.destinations = [];
+        this.destinationsByHour = [] ;
+        this.destination = [];
         this.destinationID = [];
         this.update = function (data){
-                if (this.destination[data.depto_destino] === undefined){
-                    this.destination[data.depto_destino] = new DestinationRegister(data);
-                    
-                }
-                else{
-                    this.destination[data.depto_destino].add(data);
-               }
-       };
-    };
+            if (this.destination[data.depto_destino] === undefined){
+                this.destination[data.depto_destino] = new DestinationRegister(data);  
+                        this.destinationID.push(data.depto_destino);
+            }
+            else{
+                this.destination[data.depto_destino].add(data);
+           }
+       }
+    }
 
     var ODRegister = function (data){
         this.atributo = data.cantidad_as ;
@@ -114,18 +159,15 @@ function DataOrigin($http, $q,LeafletServices) {
        // this.pobl2010_origen = data.pobl2010_origen ;
        // this.prov_destino = data.prov_destino ;
         this.provincia = data.prov_origen ;
-        this.total =  this.colectivo +this.subte+this.tren ;
+        this.total =  data.cantidad_total;
         this.total_porcentaje = 0 ;
 
         //this.detail = [] ; 
         //this.detail.push(data);
         this.style = {};
-
         this.detail = new RegisterDetail();
-
-
-        this.destinations = [] ;
-        this.destinations[data.depto_destino] = 0 ;
+        // this.destinations = [] ;
+        // this.destinations[data.depto_destino] = 0 ;
 
         this.porcentaje = {
             colectivo : 0,
@@ -145,11 +187,11 @@ function DataOrigin($http, $q,LeafletServices) {
             this.transbordo += data.cantidad_transbordo ;
             this.tren += data.cantidad_tren ;
             //this.detail.push(data);
-            this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
-            this.destinations[data.depto_destino] =  0 ;
+            this.total +=  data.cantidad_total ;
+            //this.destinations[data.depto_destino] =  0 ;
             this.updatePorcentajes();
 
-           // this.updateDetail(data){}
+            this.detail.update(data);
         };
         // this.setPorcentaje = function(key,value){
         //     this.porcentaje[key] = value;
@@ -159,19 +201,19 @@ function DataOrigin($http, $q,LeafletServices) {
         //comportamiento
         this.highlight = function () {
             //console.log("highlight" + this.departamento);
-            this.destinations.forEach( function(index,element) {
-                LeafletServices.polygons[element].highlight('destination');
-            });
-            LeafletServices.polygons[this.departamento].highlight('origin');
+            // this.destinations.forEach( function(index,element) {
+            //     LeafletServices.polygons[element].highlight('destination');
+            // });
+            // LeafletServices.polygons[this.departamento].highlight('origin');
             // LeafletServices.polygons[this.departamento].focus();
 
         };
 
         this.unHighlight = function () {
-            this.destinations.forEach( function(index,element) {
-                LeafletServices.polygons[element].unHighlight();
-            });
-            LeafletServices.polygons[this.departamento].unHighlight();
+            // this.destinations.forEach( function(index,element) {
+            //     LeafletServices.polygons[element].unHighlight();
+            // });
+            // LeafletServices.polygons[this.departamento].unHighlight();
         };
 
     };
@@ -182,6 +224,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
 
         data.forEach( function(element, index) {
+
+            console.log(element.hora_inicio);
             if (bigTable[element.depto_origen] ==  undefined) { 
                     bigTable[element.depto_origen] = new ODRegister(element);
                     model.matriz.push(bigTable[element.depto_origen]);
@@ -212,7 +256,13 @@ function DataOrigin($http, $q,LeafletServices) {
             if(model.max[key] < element[key]){
                 model.max[key] = element[key]
             }
-        };
+        }
+
+        function storeMin(key,element){
+            if(model.min[key] > element[key]){
+                model.min[key] = element[key]
+            }
+        }
 
         function recorrer(element,index){
             element.total_porcentaje = (element.total*100)/model.totales.total;
@@ -221,9 +271,17 @@ function DataOrigin($http, $q,LeafletServices) {
             storeMax('subte',element);
             storeMax('colectivo',element);
             storeMax('tren',element);
+            storeMax('transbordo',element);
+            storeMax('atributo',element);
 
+            storeMin('total',element);
+            storeMin('subte',element);
+            storeMin('colectivo',element);
+            storeMin('tren',element);
+            storeMin('transbordo',element);
+            storeMin('atributo',element);
 
-        };
+        }
 
         //calcular medias
         model.medias.atributo = parseInt( model.totales.atributo / model.matriz.length);
@@ -237,7 +295,7 @@ function DataOrigin($http, $q,LeafletServices) {
             var g = parseInt(param.map(0,model.max.total,model.colors.min.g,model.colors.max.g));
             var b = parseInt(param.map(0,model.max.total,model.colors.min.b,model.colors.max.b));
             return 'rgb('+r+','+g+','+b+')';
-        };
+        }
 
         function paintRecord(element,index){
 
@@ -248,13 +306,13 @@ function DataOrigin($http, $q,LeafletServices) {
                 strokeOpacity:1
             };
 
-        };
+        }
 
         //ordenar por totales la matriz
         model.matriz.sort(compareFunction)
         function compareFunction(a,b){
             return b.total - a.total ;
-        };
+        }
 
 
         console.log(model);

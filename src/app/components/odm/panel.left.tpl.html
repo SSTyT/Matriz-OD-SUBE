@@ -11,21 +11,12 @@
 		<div class="panel-line"></div>
 		<ul class="origin-list">
 			<li ng-if="model.matriz.length==0">CARGANDO</li>
-			<li class="origin-item-wrapper" ng-repeat="record in model.matriz track by $index" ng-click="open(record.departamento)" ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight()">
+			<li class="origin-item-wrapper" ng-repeat="record in model.matriz track by $index" >
 				<od-record id="{{record.departamento}}" value="{{record.depto}}" ></od-record>
 			</li>
 		</ul>
 	</div>
-	<div class="left-panel detail back">
-		<div class="panel-top"></div>
-		<div class="panel-title">
-			ORIGEN <span ng-click="vm.close(record.departamento)">BACK</span>
-		</div>
-		<div class="panel-line"></div>
-			
-		  <nvd3 options="current.options" data="current.data"></nvd3>
-			
-	</div>
+	<origin-detail></origin-detail>
 
 </div>
 

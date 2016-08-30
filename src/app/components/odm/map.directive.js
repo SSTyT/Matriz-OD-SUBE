@@ -55,13 +55,7 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
                 console.log(data);
                 $scope.model = data ; 
             }
-
-
-
             //$scope.map.setup();
-
-
-
             console.log("directive odMap linked");
         }
     };

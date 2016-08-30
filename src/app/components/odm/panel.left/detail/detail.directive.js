@@ -8,7 +8,7 @@ function originDetail($timeout) {
     return {
         restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
         //template: '<ng-map class="filtre--l"  disable-default-u-i="true" center="-34.628767838201036,-58.542341058691335" zoom="12" styles=\'[{featureType: "poi",elementType: "labels",stylers: [{ visibility: "off" }]},{"featureType":"landscape","stylers":[{"hue":"#FFBB00"},{"saturation":43.400000000000006},{"lightness":37.599999999999994},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":2.4000000000000057},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}]\'> </ng-map>',
-        templateUrl: 'app/components/odm/detail/detail.tpl.html',
+        templateUrl: 'app/components/odm/panel.left/detail/detail.tpl.html',
         replace: true,
 
         link: function($scope, iElm, iAttrs) {
@@ -85,7 +85,7 @@ function originDetail($timeout) {
 
             $scope.current.options.horas = {
                 chart: {
-                        color: ['rgb(255,10,10)','rgb(22,186,197)','rgb(104,216,214)','rgb(156,234,60)'],
+                        color: ['rgb(22,186,197)','rgb(104,216,214)','rgb(156,234,60)'],
                     type: 'multiBarChart',
                     height: 150,
                     margin : {
@@ -152,7 +152,7 @@ function originDetail($timeout) {
                 {
                     key:'total',
                     values:[
-                        {x:'00:00',y:1},
+                        {x:0,y:1},
                         {x:1,y:15},
                         {x:2,y:2},
                         {x:3,y:15},

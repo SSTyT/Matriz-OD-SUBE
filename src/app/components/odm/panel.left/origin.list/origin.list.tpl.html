@@ -1,0 +1,13 @@
+<div class="left-panel list front">
+	<div class="panel-top"></div>
+	<div class="panel-title">
+		ORIGEN  
+	</div>
+	<div class="panel-line"></div>
+	<ul class="origin-list">
+		<li ng-if="model.matriz.length==0">CARGANDO</li>
+		<li class="origin-item-wrapper" ng-repeat="record in model.matriz track by $index" >
+			<od-record id="{{record.departamento}}" value="{{record.depto}}" ></od-record>
+		</li>
+	</ul>
+</div>

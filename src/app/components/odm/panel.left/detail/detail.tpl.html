@@ -5,12 +5,12 @@
 		</div>
 		<div class="panel-line"></div>
 		
-		<h5> Porcentajes de viajes</h5>	
+		<h5> {{current.record.total}} viajes</h5>	
 		<nvd3 options="current.options.viajes" data="current.data.viajes"></nvd3>
-		<h5> Transbordos</h5>
+		<h5> {{current.record.transbordo}} transbordos</h5>
 		<nvd3 options="current.options.transbordo" data="current.data.transbordo"></nvd3>
-		<h5> Atributos Sociales</h5>
+		<h5> {{current.record.atributo}}  Atributos Sociales</h5>
 		<nvd3 options="current.options.atributo" data="current.data.atributo"></nvd3>
-		<h5> Viajes por horario</h5>
+		<h5> Distribucion Horaria</h5>
 		<nvd3 options="current.options.horas" data="current.data.horas"></nvd3>
 	</div>

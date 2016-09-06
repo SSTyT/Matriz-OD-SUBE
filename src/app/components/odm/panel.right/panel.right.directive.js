@@ -19,7 +19,25 @@ function odRightPanel($timeout,DataOrigin) {
 
             $scope.rightPanel.setList = function(){
                 console.log('right panel set list')
-                    $scope.rightPanel.list = $scope.current.record.detail.destination;
+                    $scope.rightPanel.list = [];
+
+
+                    var destinos = $scope.current.record.detail.destination;
+                    for (var key in destinos) {
+                      if (destinos.hasOwnProperty(key))
+                        project(destinos[key]);
+                    }
+
+                    //$scope.current.record.detail.destination.forEach(project);
+                    function project (element,index){
+                        $scope.rightPanel.list.push(element);
+                    }
+
+                        $scope.rightPanel.list.sort(sortFunction);
+                        function sortFunction(a,b){
+                            return b.total - a.total ;
+                        }
+
             };
 
             console.log("directive odRightPanel linked");

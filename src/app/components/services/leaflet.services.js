@@ -78,7 +78,7 @@ function leafletServices($http,$q){
 
 
 
-	function Polygon(data){
+	function Polygon(data,openCallBack){
 
 		this.style = data.style; 
 		this.polygon = L.geoJson(data.geometry,{
@@ -91,10 +91,36 @@ function leafletServices($http,$q){
 		     		layer.on('click',clickHandler);
 			     	function clickHandler(){			          
 			        	console.log(feature.properties);
+			        	openCallBack(parseInt(data.geometry.properties.depto));
 			      	}
+
+			      	//console.log("popup center");
+			      	//console.log(layer.getBounds().getCenter());
+
+					var popup = L.popup()
+					    .setLatLng(layer.getBounds().getCenter())
+					    .setContent('<p>Departamento '+parseInt(data.geometry.properties.depto)+'<br/> tiene popup ahora </p>')
+					    .openOn(self.map);
+
+
+
+					layer.bindPopup(popup);
+			        layer.on('mouseover', function (e) {
+			            this.openPopup();
+			        });
+			        // layer.on('mouseout', function (e) {
+			        //     this.closePopup();
+			        // });
 				}
 		}).addTo(self.map);
 
+		var PolyIcon = L.divIcon({
+			className: 'polygon-marker ' +data.geometry.properties.depto ,
+			html: '<div class="label">'+data.geometry.properties.depto+'<div>'
+		});
+			// you can set .my-div-icon styles in CSS
+
+		this,marker = L.marker(this.polygon.getBounds().getCenter(), {icon: PolyIcon}).addTo(self.map);
 
 		this.focus = function () {
 
@@ -103,8 +129,8 @@ function leafletServices($http,$q){
        		//self.map.setView(this.polygon.getBounds().getCenter());
 			self.map.zoomOut();
 		}
-		this.highlight = function (type) {
-            this.polygon.setStyle(self.highlightStyle[type]);
+		this.highlight = function (type,style) {
+            this.polygon.setStyle(style);
 		}
 		this.unHighlight = function () {
 			this.polygon.setStyle(this.style)
@@ -113,9 +139,9 @@ function leafletServices($http,$q){
 
 	}
 
-	function drawPoly(data){
+	function drawPoly(data,openCallBack){
 		
-		self.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data) ;
+		self.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data,openCallBack) ;
 
 		//console.log("polygon: "+ data.geometry.properties.depto+ "    added");
  		//L.circleMarker(polygon.getBounds().getCenter()).bindLabel( data.properties, {noHide:true}).addTo(self.map);
@@ -126,11 +152,21 @@ function leafletServices($http,$q){
 		// map.showLabel(label);
 	}
 
+
+
+	function drawPath(data){
+		
+
+
+		L.geoJson(data.geometry).addTo(self.map);
+	}
+
 	return {
 		initMap   : initMap,
 		getMap    : getMap,
 		getLayers : getLayers,
 		drawPoly  : drawPoly,
+		drawPath  : drawPath,
 		polygons  : self.polygons
 	} ;
 

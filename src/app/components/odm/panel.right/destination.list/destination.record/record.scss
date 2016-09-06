@@ -1,0 +1,101 @@
+.destiantion-record{
+	//outline:2px solid red;
+	    width: 100%;
+	    position: relative;
+	    .clickOverlay{
+	    	width: 100%;
+	    	height: 100%;
+	    	// outline:black 2px solid ;
+	    	position:absolute;
+	    }
+	.departures,
+	.transboarding,
+	.social-attribute{
+		width: 100%
+	}
+
+	.departures{
+		//outline: 1px dotted violet;
+		display: flex;
+		flex-direction:row;
+		.department{
+			font-size: 1.5em;
+			width: 30%;
+			text-align: center;
+
+
+			.action{
+				.total{}
+				.ver{}
+			}
+
+			.action:hover{}
+
+			.ver{
+				color:gray;
+			}
+			.ver:hover{
+				color:black;
+			}
+		}
+		.resume{
+			width: 70%;
+			position:relative;
+			.record-value,.record-graph{
+				width: 100%;
+				position: absolute;
+				display: flex;
+				flex-direction: row;
+
+				height: 100%;
+				    -webkit-transition: all .3s; /* Safari */
+    				transition: all .3s;
+				.background{
+					width: 100%;
+					padding-left: 3px;
+
+				    -webkit-transition: all .3s; /* Safari */
+    				transition: all .3s;
+    				height: 100%;
+				}
+				// .value{
+				// 	width:0;
+				// }
+			}
+
+			.record-graph{
+				    right: 0;
+
+				.background.tren{
+					 background:rgb(22,186,197);
+				};
+			
+				.background.colectivo{
+					background:rgb(104,216,214);
+				}
+			
+				.background.subte{
+					background:rgb(156,234,60);
+				}
+			}
+			.record-value.total{
+				.background{
+					background:rgb(245, 85, 54);
+					}
+				}
+		}
+
+		.resume:hover{
+				.record-value{
+					width: 70%;
+					
+				}
+				.record-graph{
+					width: 30%;
+
+				}
+		}
+	}
+
+
+}

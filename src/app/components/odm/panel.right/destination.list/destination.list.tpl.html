@@ -1,20 +1,10 @@
 <div class="right-panel front">
         <div class="panel-top"></div>
-        <div class="panel-title">DESTINOS</div>
+        <div class="panel-title">DESTINOS: {{rightPanel.list.length}}</div>
         <div class="panel-line"></div>      
         <ul class="destination-list">
-            <li class="destination-item" ng-repeat="destination in rightPanel.list  track by $index" ng-mouseover="destination.highlight()" ng-mouseleave="destination.unHighlight()">
-                <div class="destination-info">
-                    <span class="highlight" ng-style="{background:destination.style.color}">
-                            {{destination}}
-                    </span>
-                <!--     <span class="resume">
-                        <span class="tren">     {{destination.cantidad_tren}}</span>
-                        <span class="coelctivo">{{destination.cantidad_bus}}</span>
-                        <span class="subte">{{destination.cantidad_subte}}</span>
-                        <span class="total">{{destination.total}}</span>
-                    </span> -->
-                </div>
+            <li class="destination-item" ng-repeat="record in rightPanel.list  track by $index" ng-mouseover="destination.highlight()" ng-mouseleave="destination.unHighlight()">
+                <destination-record  ></destination-record>
             </li>
         </ul>
     </div>

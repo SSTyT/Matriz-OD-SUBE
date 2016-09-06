@@ -1,0 +1,54 @@
+<div class='destiantion-record' >
+			<!-- <div class='clickOverlay'  ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight()"  ng-click="vm.open(record.departamento)"></div> -->
+	<div class='departures'>
+		<span class='department'>
+			<div  ng-style={background:record.style.color}>
+				{{record.departamento}}
+			</div>
+			<div class="action">
+				<div  class=total ng-style={background:record.style.color}>
+					{{record.total}}
+				</div>
+			</div>
+		</span>
+		<span class='resume'>
+			<div class="record-value" ng-style={background:record.style.color}>
+				<div class='background'  >
+					<div> Colectivos {{record.porcentaje.colectivo}} %</div>
+					<div> Tren {{record.porcentaje.tren}} %</div>
+					<div> Subte {{record.porcentaje.subte}} %</div>
+				</div>
+			</div>
+			<div class="record-graph">
+				<div class='background colectivo'  ng-style="{width:record.porcentaje.colectivo+'%'}">
+				</div>
+				<div class='background tren' ng-style="{width:record.porcentaje.tren+'%'}">
+				</div>
+				<div class='background subte' ng-style="{width:record.porcentaje.subte+'%'}">
+				</div>
+			</div>
+		
+<!-- 			<div class='transboarding'>
+				<div class='current'>
+					<div class="background"></div>
+					<div class="value">{{record.transbordo}}</div>
+				</div>
+				<div class='media-value'>
+					<div class="background"></div>
+					<div class="value">{{model.medias.transbordo}}</div>
+				</div>
+			</div>
+			<div class='social-attribute'>
+				<div class='current'>
+					<div class="background"></div>
+					<div class="value"> {{record.atributo}}</div>
+				</div>
+				<div class='media-value'>
+					<div class="background"></div>
+					<div class="value">{{model.medias.atributo}}</div>
+				</div>
+			</div> -->
+		</span>
+	</div>
+
+</div>

@@ -18,16 +18,41 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
             var promises = [
                 LeafletServices.initMap(),
                 DataOrigin.getZonas(),
-                DataOrigin.getODData()
+                DataOrigin.getODData(),
+                DataOrigin.getColectivos(),
+                DataOrigin.getSubtes(),
+                DataOrigin.getTrenes()
             ];
 
             $q.all(promises).then(function(values){
                 console.log(values);
                 mapHandler(values[0]);
-                drawPolygons(values[1]);
                 drawMatrix(values[2]);
 
+
+                drawPolygons(values[1]);
+               // drawTransport(values[3],values[4],values[5])
+
             });
+
+
+            function drawTransport(coles,subtes,trenes){
+
+
+                console.log(coles);
+                console.log(subtes);
+                console.log(trenes);
+
+                  coles.forEach(pintar);
+                  //subtes.forEach(pintar);
+                  //trenes.forEach(pintar);
+
+                function pintar(e,i){
+                    LeafletServices.drawPath({
+                        geometry:e,
+                    });
+                }
+            }
 
             function mapHandler(leMap){
                 $scope.map = {
@@ -47,6 +72,10 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
                     LeafletServices.drawPoly({
                         geometry:e,
                         style : DataOrigin.record[parseInt(e.properties.depto)].style
+                    },function(id){
+
+                        $scope.vm.open(id);
+                        $scope.$apply();
                     });
                 }
             }

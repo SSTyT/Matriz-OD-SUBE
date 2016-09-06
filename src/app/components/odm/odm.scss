@@ -15,7 +15,7 @@ section{
 
 
 path.departamento{
-	transition-property:color,stroke, background;
+	transition-property:fill,fill-opacity,stroke,background;
 	transition-duration:1s;	
 }
 
@@ -47,7 +47,7 @@ path.departamento:hover{
 		.right-panel,.left-panel{
 			width: 100%;
 			// padding:.5em;
-			max-height: 70vh;
+			max-height: 75vh;
 			background: #F2F0ED;
 			.panel-top{
 				height: 1em;

@@ -245,7 +245,27 @@ function DataOrigin($http, $q,LeafletServices) {
         this.selectAs = function(type){
 
         };
-           
+        
+
+        this.markAsDestination   = function(){
+
+        }
+
+        this.unMarkAsDestination = function(){
+
+        }
+
+        this.drawLineTo = function(){
+
+        }
+
+        this.eraseLine  = function(){
+            
+        }
+
+
+
+
         this.highlight = function () {
             console.log("highlight" + this.departamento);
 
@@ -286,15 +306,14 @@ function DataOrigin($http, $q,LeafletServices) {
 
         };
 
+
+
         this.unHighlight = function (id,current) {
-
-
             if ( (current !== undefined) &&(id !== current.departamento )){
-
-              model.departamentos.forEach(normalizePolygons);
-              function normalizePolygons(element,index){
+                model.departamentos.forEach(normalizePolygons);
+                function normalizePolygons(element,index){
                     LeafletServices.polygons[element].unHighlight();
-              }
+                }
             }
 
             // this.detail.destination.forEach( function(element) {
@@ -305,10 +324,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
     };
 
-
     function cookOD(data){
         data.forEach( function(element, index) {
-
             //console.log(element.hora_inicio);
             if (bigTable[element.depto_origen] ==  undefined) { 
                     bigTable[element.depto_origen] = new ODRegister(element);
@@ -318,7 +335,6 @@ function DataOrigin($http, $q,LeafletServices) {
             else {
                 bigTable[element.depto_origen].add(element)
             }
-
             //console.log("record: "+element.depto_origen+" added");
         });
 
@@ -365,7 +381,6 @@ function DataOrigin($http, $q,LeafletServices) {
             storeMin('tren',element);
             storeMin('transbordo',element);
             storeMin('atributo',element);
-
         }
 
         //calcular medias

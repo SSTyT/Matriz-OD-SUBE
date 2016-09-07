@@ -14,7 +14,7 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
         link: function($scope, iElm, iAttrs) {
 
            // LeafletServices.initMap().then(mapHandler);
-
+           $scope.loadingApp = true ;
             var promises = [
                 LeafletServices.initMap(),
                 DataOrigin.getZonas(),
@@ -32,6 +32,8 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
 
                 drawPolygons(values[1]);
                // drawTransport(values[3],values[4],values[5])
+
+                          $scope.loadingApp = false ;
 
             });
 
@@ -67,17 +69,27 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
             }
 
             function drawPolygons(data){
+
+
                 data.forEach(pintar);
                 function pintar(e,i){
-                    LeafletServices.drawPoly({
-                        geometry:e,
-                        style : DataOrigin.record[parseInt(e.properties.depto)].style
-                    },function(id){
 
-                        $scope.vm.open(id);
-                        $scope.$apply();
-                    });
+                    $timeout(function(){
+                        LeafletServices.drawPoly({
+                            geometry:e,
+                            style : DataOrigin.record[parseInt(e.properties.depto)].style
+                        },function(id){
+                            $scope.vm.open(id);
+                            $scope.$apply();
+                        });
+                    },100*i);
+
+
+
+
                 }
+
+
             }
 
             function drawMatrix(data){

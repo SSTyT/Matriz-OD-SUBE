@@ -7,8 +7,10 @@
     text-align: center;
 	color:#1D1C1A;
 	background:#FDD306;
-	padding: .5em 3em;
-    
+	width:15%;
+    padding: .5em 0 ;
+    transition: all 2s;
+    top:0;
     .title{
     	font-size: 3em;
     	font-weight: bold;
@@ -17,7 +19,57 @@
     .sub-title{
 		font-size: 1em;
     }
+
+    .loader{
+        overflow: hidden;
+        outline:red 1px solid red;
+        opacity:1;
+        transition: all 1s;
+        height: 20px;
+        .spinner{
+            outline:red 1px solid yellow;
+            position:relative;
+            height: 20px;
+        }
+    }
+
+    .loader.oculto{
+        opacity:0;
+        height: 0px;
+    }
 }
+
+
+.header.centered{
+    top:47%;
+}
+
+.spinner div {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+ // left: -20px;
+  // top: 40px;
+  background-color: #333;
+  border-radius: 50%;
+  animation: move 3s infinite cubic-bezier(.2,.64,.81,.23);
+}
+.spinner div:nth-child(2) {
+  animation-delay: 100ms;
+}
+.spinner div:nth-child(3) {
+  animation-delay: 200ms;
+}
+.spinner div:nth-child(4) {
+  animation-delay: 300ms;
+}
+@keyframes move {
+  0% {left: -10%;}
+
+  75% {left:100%;}
+  100% {left:100%;}
+}
+
 
 // .header{
 // 	font-family: 'Gotham';

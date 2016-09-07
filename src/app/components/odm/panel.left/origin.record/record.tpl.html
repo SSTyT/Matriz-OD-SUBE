@@ -1,5 +1,5 @@
 <div class='origin-record'>
-			<div class='clickOverlay'  ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight(record.departamento,vm.current)"  ng-click="vm.open(record.departamento)"></div>
+	<div class='clickOverlay'  ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight(record.departamento,vm.current)"  ng-click="vm.open(record.departamento)"></div>
 	<div class='departures'>
 		<span class='department'>
 			<div  ng-style={background:record.style.color}>
@@ -9,7 +9,7 @@
 		</span>
 		<span class='resume'>
 			<div class="record-value total">
-				<div class='value'>Total {{record.total}}</span> </div>
+				<div class='value'>Total <span> {{record.total}}</span> </div>
 				<div class='background' ng-style={background:record.style.color}> </div>
 			</div>
 			<div class="record-value colectivo">

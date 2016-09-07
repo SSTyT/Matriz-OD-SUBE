@@ -1,4 +1,12 @@
-<div class="header">
+<div class="header" ng-class={centered:loadingApp}>
 	<div class="title">SUBE</div>
 	<div class="sub-title">Matriz Origen - Destino</div>
+	<div class="loader"  ng-class={oculto:!loadingApp}>
+		<div class="spinner">
+		  <div></div>
+		  <div></div>
+		  <div></div>
+		  <div></div>
+		</div>
+	</div>
 </div>

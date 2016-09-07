@@ -14,18 +14,6 @@ section{
 
 
 
-path.departamento{
-	transition-property:fill,fill-opacity,stroke,background;
-	transition-duration:1s;	
-}
-
-path.departamento:hover{
-	stroke:white;
-	stroke-width:4;
-	fill-opacity:1;
-
-	}
-
 
 	.left-dock,.right-dock{
 		font-family: 'Gotham';
@@ -33,7 +21,7 @@ path.departamento:hover{
 		position:absolute;
 		height: 100%;
    		transition-property: all;
-    	transition-duration: .5s;
+    	transition-duration: 1.5s;
     	min-width: 15vw;
 
     	display: flex;
@@ -105,12 +93,19 @@ path.departamento:hover{
 		}
 	}
 
+	.right-dock.hidden{
+		right:100%;
+	}
+
 	.left-dock{
 		left:1em;
 
 		.left-panel{
 			// background:rgba(255,255,0,1);
 		}
+	}
+	.left-dock.hidden{
+		left:-100%;
 	}
 }
 

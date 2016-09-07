@@ -1,21 +1,10 @@
-angular.module('matrizOdSube').factory('LeafletServices', ['$http','$q',  leafletServices]);
-
-
-
+angular.module('matrizOdSube').factory('LeafletServices', ['$http','$q' , leafletServices]);
 
 function leafletServices($http,$q){
 	self = this ;
 	self.OSM;
 	self.map;
 	self.polygons = [] ;
-
-/*
-    stroke: rgba(91, 147, 61, 0.8);
-    stroke-opacity: 0.75;
-    stroke-width: 1;
-    fill: rgba(91, 147, 61, 0.8);
-    fill-opacity: 0.2;
-*/
 
 	self.highlightStyle = {
 		// origin : {
@@ -71,16 +60,22 @@ function leafletServices($http,$q){
                 self.OSM.off("load", callmeOnce);
             });
 		});
-
-
             return promise ; 
 	}
 
-
-
 	function Polygon(data,openCallBack){
+		
+
+		
+
 
 		this.style = data.style; 
+		this.anchorPoint = getUpperPoint(data.geometry);
+		var poly = this;
+
+
+
+
 		this.polygon = L.geoJson(data.geometry,{
 			style:this.style,
 		 	className:data.geometry.properties.depto+" departamento",
@@ -98,15 +93,18 @@ function leafletServices($http,$q){
 			      	//console.log(layer.getBounds().getCenter());
 
 					var popup = L.popup()
-					    .setLatLng(layer.getBounds().getCenter())
-					    .setContent('<p>Departamento '+parseInt(data.geometry.properties.depto)+'<br/> tiene popup ahora </p>')
-					    .openOn(self.map);
+					    //.setLatLng(poly.anchorPoint)
+						.setLatLng(layer.getBounds().getCenter())
+
+					    .setContent('<p>Departamento '+parseInt(data.geometry.properties.depto)+'<br/>  </p>');
+					 
 
 
 
 					layer.bindPopup(popup);
 			        layer.on('mouseover', function (e) {
 			            this.openPopup();
+			            poly.polygon.bringToFront();
 			        });
 			        // layer.on('mouseout', function (e) {
 			        //     this.closePopup();
@@ -116,14 +114,19 @@ function leafletServices($http,$q){
 
 		var PolyIcon = L.divIcon({
 			className: 'polygon-marker ' +data.geometry.properties.depto ,
-			html: '<div class="label">'+data.geometry.properties.depto+'<div>'
+			html:	'<div class="marker-content">'+
+						'<div class="marker-border">'+
+							parseInt(data.geometry.properties.depto)+
+						'</div>'+
+					'<div>'
 		});
 			// you can set .my-div-icon styles in CSS
 
-		this,marker = L.marker(this.polygon.getBounds().getCenter(), {icon: PolyIcon}).addTo(self.map);
+		this,marker = L.marker(this.polygon.getBounds().getCenter(), {icon: PolyIcon}).on('click',function(){
+			openCallBack(parseInt(data.geometry.properties.depto));
+		}).addTo(self.map);
 
 		this.focus = function () {
-
 			self.map.fitBounds(this.polygon.getBounds());
 
        		//self.map.setView(this.polygon.getBounds().getCenter());
@@ -136,6 +139,20 @@ function leafletServices($http,$q){
 			this.polygon.setStyle(this.style)
 		}
 
+		function getUpperPoint(data){
+
+			var out = [0,0] ;
+			data.geometry.coordinates[0][0].forEach(findAnchor);
+
+			function findAnchor(element,index){
+				//console.log(element);
+				if (out[0] > element[0]){
+					out = element ;
+				}
+			}
+
+			return out;
+		}
 
 	}
 

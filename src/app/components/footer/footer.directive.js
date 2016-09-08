@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('matrizOdSube').directive('brandFooter', ['$timeout', brandFooter]);
+angular.module('matrizOdSube').directive('brandFooter', ['$timeout','LeafletServices', brandFooter]);
 
-function brandFooter($timeout) {
+function brandFooter($timeout,LeafletServices) {
     // Runs during compile
     console.log("directive brandFooter compiled");
     return {

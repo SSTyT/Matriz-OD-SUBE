@@ -62,9 +62,19 @@ function leafletServices($timeout,$http,$q){
 
 
 
-            service.map.on("zoomstart", function () {
+            service.map.on("zoomend", function () {
        			service.polygons.forEach( function(element, index) {
-       				console.log(element);
+       			
+
+					if (element.id <= 15){
+						console.log(element);
+	       				if (service.map.getZoom() <= 10){
+	       					element.setTinyIcon();
+	       				}else{
+	       					element.setIcon();
+	       				}
+					}
+
        			});
             });
 
@@ -75,7 +85,9 @@ function leafletServices($timeout,$http,$q){
 	function Polygon(data,openCallBack){
 		var self = this;
 		self.style = data.style; 
-		self.anchorPoint = getUpperPoint(data.geometry);
+		//self.anchorPoint = getUpperPoint(data.geometry);
+		
+		self.id = parseInt(data.geometry.properties.depto);
 		self.polygon = L.geoJson(data.geometry,{
 			style:self.style,
 		 	className:data.geometry.properties.depto+" departamento animated",
@@ -108,20 +120,6 @@ function leafletServices($timeout,$http,$q){
 				}
 		}).addTo(service.map);
 
-		var PolyIcon = L.divIcon({
-			className: 'polygon-marker ' +data.geometry.properties.depto  + (parseInt(data.geometry.properties.depto)<=15)? 'caba':'',
-			html:	'<div class="marker-content">'+
-						'<div class="marker-border">'+
-							parseInt(data.geometry.properties.depto)+
-						'</div>'+
-					'<div>'
-		});
-			// you can set .my-div-icon styles in CSS
-
-		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: PolyIcon}).on('click',function(){
-			openCallBack(parseInt(data.geometry.properties.depto));
-		}).addTo(service.map);
-
 		self.focus = function () {
 			service.map.fitBounds(self.polygon.getBounds());
 
@@ -142,6 +140,41 @@ function leafletServices($timeout,$http,$q){
 
 		self.showMarker = function (){
 			self.marker.addTo(service.map);
+		}
+
+
+
+
+		var icon = L.divIcon({
+			className: 'polygon-marker'+data.geometry.properties.depto,
+			html:	'<div class="marker-content">'+
+						'<div class="marker-border">'+
+							parseInt(data.geometry.properties.depto)+
+						'</div>'+
+					'<div>'
+		});
+		var tinyIcon = L.divIcon({
+			className: 'polygon-marker '+data.geometry.properties.depto,
+			html:	'<div class="marker-content-tiny">'+
+						'<div class="marker-border">'+
+							parseInt(data.geometry.properties.depto)+
+						'</div>'+
+					'<div>'
+		});
+		
+			// you can set .my-div-icon styles in CSS
+
+		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: (service.map.getZoom()<=10)? icon:tinyIcon}).on('click',function(){
+			openCallBack(parseInt(data.geometry.properties.depto));
+		}).addTo(service.map);
+
+
+
+		self.setTinyIcon = function (){
+			self.marker.setIcon(tinyIcon);
+		}
+		self.setIcon = function (){
+			self.marker.setIcon(icon);
 		}
 
 		function getUpperPoint(data){

@@ -109,6 +109,22 @@
 		justify-content:center;
 	}
 }
+.marker-content-tiny{
+	color: #1D1C1A;
+    background: #FDD306;
+    display:flex;
+	flex-direction:row;
+	align-items:center;
+	justify-content:center;
+	border-radius:30px;
+	.marker-border{
+		border:rgba(29, 28, 26, 0.27) 1px solid;
+		border-radius:25px;
+		width:5px;
+		height:5px;
+
+	}
+}
 
 path.departamento{
 	transition-property:fill,fill-opacity,stroke,background;

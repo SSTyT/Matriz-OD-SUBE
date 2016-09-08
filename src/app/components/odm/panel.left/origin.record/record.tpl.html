@@ -1,39 +1,34 @@
 <div class='origin-record'>
-	<div class='clickOverlay'  ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight(record.departamento,vm.current)"  ng-click="vm.open(record.departamento)"></div>
+	<!-- <div class='clickOverlay'  ng-mouseover="$ctrl.record.highlight()" ng-mouseleave="$ctrl.record.unHighlight($ctrl.record.departamento,vm.current)"  ng-click="vm.open($ctrl.record.departamento)"></div> -->
 	<div class='departures'>
-		<span class='department'>
-			<div  ng-style={background:record.style.color}>
-				{{record.departamento}}
+		<span class='department'  ng-style={background:$ctrl.record.style.color}>
+			<div class="label">
+				{{$ctrl.record.departamento}}
 			</div>
-
+			<div class="ver"  ng-click="vm.open($ctrl.record.departamento)">
+				VER
+			</div>
 		</span>
 		<span class='resume'>
-			<div class="record-value total">
-				<div class='value'>Total <span> {{record.total}}</span> </div>
-				<div class='background' ng-style={background:record.style.color}> </div>
+			<div class="record-value">
+				<!-- <div class='value'>Total <span> {{$ctrl.record.total}}</span> </div> -->
+				<span class='background total'  	ng-mouseover="$ctrl.hover('total')" 	ng-style={background:$ctrl.record.style.color}> </span>
+				<span class='background colectivo'	ng-mouseover="$ctrl.hover('colectivo')" ng-style="{width:$ctrl.record.porcentaje.colectivo.toFixed(0)+'%'}"></span>
+				<span class='background tren'  		ng-mouseover="$ctrl.hover('tren')"		ng-style="{width:$ctrl.record.porcentaje.tren.toFixed(0) +'%'}"></span>
+				<span class='background subte' 		ng-mouseover="$ctrl.hover('colectivo')" ng-style="{width:$ctrl.record.porcentaje.subte.toFixed(0)+'%'}"></span>
 			</div>
-			<div class="record-value colectivo">
-				<div class='value'>Colectivo <span> {{record.porcentaje.colectivo}} %</span></div>
-				<div class='background'  ng-style="{width:record.porcentaje.colectivo+'%'}"></div>
-			</div>
-			<div class="record-value tren">
-				<div class='value'>Tren<span> {{record.porcentaje.tren}} %</span></div>
-				<div class='background' ng-style="{width:record.porcentaje.tren +'%'}"></div>
-			</div>
-			<div class="record-value subte">
-				<div class='value'>Subte  <span>{{record.porcentaje.subte}} %</span></div>
-				<div class='background' ng-style="{width:record.porcentaje.subte+'%'}"></div>
-			</div>
-			<div class='record-value transboarding'>
-					<div class="value">Transbordos {{record.transbordo}}</div>
-					<div class="background" ng-style="{width:record.porcentaje.transbordo+'%'}"></div>
-					<div class="background-media" ng-style="{width:model.medias.transbordo_porcentaje+'%'}"></div>
+
+<!-- 			<div class='record-value transboarding'>
+				
+					<div class="background" ng-style="{width:$ctrl.record.porcentaje.transbordo+'%'}"></div>
+					<div class="background-media" ng-style="{width:$ctrl.model.medias.transbordo_porcentaje+'%'}"></div>
 			</div>
 			<div class='record-value social-atribute'>
-					<div class="value">At.Soc. {{record.atributo}}</div>
-					<div class="background" ng-style="{width:record.porcentaje.atributo+'%'}"></div>
-					<div class="background-media" ng-style="{width:model.medias.atributo_porcentaje+'%'}"></div>
-			</div>
+				
+					<div class="background" ng-style="{width:$ctrl.record.porcentaje.atributo+'%'}"></div>
+					<div class="background-media" ng-style="{width:$ctrl.model.medias.atributo_porcentaje+'%'}"></div>
+			</div> -->
+			<div>{{$ctrl.show}}</div>
 		</span>
 	</div>
 

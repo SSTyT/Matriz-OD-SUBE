@@ -164,7 +164,7 @@ function leafletServices($timeout,$http,$q){
 		
 			// you can set .my-div-icon styles in CSS
 
-		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: (service.map.getZoom()<=10)? icon:tinyIcon}).on('click',function(){
+		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: (data.geometry.properties.depto <= 15 && service.map.getZoom()<=10)? tinyIcon:icon}).on('click',function(){
 			openCallBack(parseInt(data.geometry.properties.depto));
 		}).addTo(service.map);
 

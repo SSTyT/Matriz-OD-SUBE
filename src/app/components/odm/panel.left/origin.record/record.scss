@@ -47,7 +47,7 @@
 				position: relative;
 				//display: flex;
 				//flex-direction: row;
-				font-size: 0em;
+				
 				.background,.background-media{
 					width: 100%;
 					padding-left: 3px;
@@ -57,11 +57,17 @@
     				transition: all .3s;
     				float:right;
 				}
-				.value{
-					height:1.5em;
-					height:0px;
-					width:100%;
-					position:absolute;
+				.background.tren{
+					 background-color:rgb(22,186,197);
+				};
+				.background.colectivo{
+					background-color:rgb(104,216,214);
+				}
+				.background.subte{
+					background-color:rgb(156,234,60);
+				}
+				.background.total{
+					background: red;
 				}
 				.background-media{
  					border-bottom: gray 8px solid;
@@ -78,30 +84,7 @@
 					min-width: 5em;
 				}
 			}
-			.record-value.tren{
-				.background{
-					 background-color:rgb(22,186,197);
-				};
-			}
-			.record-value.colectivo{
-				.background{
-					background-color:rgb(104,216,214);
-				}
-			}
-			.record-value.subte{
-				.background{
-					background-color:rgb(156,234,60);
-				}
-			}
-			.record-value.total{
-				.background{
-					background: red;
 
-				}
-				.value{
-					color:white;
-				}
-			}
 			.record-value.transboarding{
 				.background{
 					border-bottom-color:rgb(194,148,138);

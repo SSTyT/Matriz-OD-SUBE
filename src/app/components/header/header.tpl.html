@@ -1,12 +1,28 @@
-<div class="header" ng-class={centered:loadingApp}>
-	<div class="title">SUBE</div>
-	<div class="sub-title">Matriz Origen - Destino</div>
-	<div class="loader"  ng-class={oculto:!loadingApp}>
+<div class="header" ng-class={loading:loadingApp}>
+	<span class="brand">
+		<div class="title">Matriz OD</div>
+	<!-- 	<div class="sub-title">Matriz Origen - Destino</div>	 -->
+	</span>
+	<span class="loader">
 		<div class="spinner">
-		  <div></div>
-		  <div></div>
-		  <div></div>
-		  <div></div>
+
 		</div>
-	</div>
+	</span>
+
+<!-- 	<svg viewBox="0 0 200 25">
+    <rect fill="#000" fill-opacity=".75" mask="url(#ham-text)"
+    x="0" y="0" width="200" height="50" />
+    <mask id="ham-text">
+      <rect fill="#fff" x="0" y="0" width="200" height="50"></rect>
+      <text y="20" fill="#000" text-anchor="middle" x="50%" font-size="20">
+         ORIGEN DESTINO
+      </text>
+    </mask>
+  </svg> -->
+	<span class="actions">
+		<span class="zoom">
+			<span class="item" ng-click="map.focus('caba')">CABA</span>
+			<span class="item" ng-click="map.focus('amba')">AMBA</span>
+		</span>
+	</span>
 </div>

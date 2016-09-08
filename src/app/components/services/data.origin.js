@@ -278,24 +278,26 @@ function DataOrigin($http, $q,LeafletServices) {
             console.log(report);
             function paintPolygons(element,index){
                 var style = {} ; 
-                if(element == self.departamento){
-                    report.origin = element;
-                     style = self.detail.destination[element].style;
-                }else {
+
                     if ( self.detail.destination[element] !== undefined){
                         style = self.detail.destination[element].style;
-                                  report.destino.push(element) ;
+                        //report.destino.push(element) ;
                     }else{
-                        report.gris.push(element) ;
                         style ={
                             weight: 2,
                             color: 'rgb(230,230,230)',
                             fillOpacity: 0.95,
                             strokeOpacity:1
                         };
+                        //report.gris.push(element) ;
                     }
-                }
+                
                 LeafletServices.polygons[element].highlight('destination',style);
+               //  if(element !== self.departamento){
+
+                // LeafletServices.polygons[element].hideMarker();
+                     
+                // }
             }
 
             // this.detail.destination.forEach( function(element) {
@@ -313,6 +315,7 @@ function DataOrigin($http, $q,LeafletServices) {
                 model.departamentos.forEach(normalizePolygons);
                 function normalizePolygons(element,index){
                     LeafletServices.polygons[element].unHighlight();
+                    LeafletServices.polygons[element].showMarker();
                 }
             }
 
@@ -445,7 +448,8 @@ function DataOrigin($http, $q,LeafletServices) {
                 weight: 2,
                 color: calcTotalColor(element.total,0,model.max.total),
                 fillOpacity: 0.95,
-                strokeOpacity:1
+                strokeOpacity:1,
+                stroke:'red'
             };
 
 
@@ -516,8 +520,6 @@ function DataOrigin($http, $q,LeafletServices) {
         return promise;
     };
 
-
-
     function getColectivos(){
                 var promise = $q(function(success, reject) {
             $http.get(urlColectivos).success(function(res) {
@@ -527,6 +529,7 @@ function DataOrigin($http, $q,LeafletServices) {
         });
         return promise;
     }
+
     function getSubtes(){
                 var promise = $q(function(success, reject) {
             $http.get(urlSubte).success(function(res) {
@@ -536,6 +539,7 @@ function DataOrigin($http, $q,LeafletServices) {
         });
         return promise;
     }
+
     function getTrenes(){
                 var promise = $q(function(success, reject) {
             $http.get(urlTrenes).success(function(res) {
@@ -546,14 +550,13 @@ function DataOrigin($http, $q,LeafletServices) {
         return promise;
     }
 
-
     return {
+        getColectivos : getColectivos,
         getODData : getODData,
+        getSubtes : getSubtes,
+        getTrenes : getTrenes,
         getZonas : getZonas,
-        record : bigTable,
-getColectivos : getColectivos ,
-getSubtes : getSubtes ,
-getTrenes : getTrenes 
+        record : bigTable
     };
 }
 

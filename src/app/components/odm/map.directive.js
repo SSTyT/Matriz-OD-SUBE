@@ -26,14 +26,37 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
 
             $q.all(promises).then(function(values){
                 console.log(values);
-                mapHandler(values[0]);
-                drawMatrix(values[2]);
+
+                // $timeout(function(){
+                //     mapHandler(values[0]);
+                // },500);
+                // $timeout(function(){
+                //     drawMatrix(values[2]);  
+                // },500);
+                // $timeout(function(){
+                //     drawPolygons(values[1]);
+                // },500);
 
 
-                drawPolygons(values[1]);
+
                // drawTransport(values[3],values[4],values[5])
 
-                          $scope.loadingApp = false ;
+               $q.all(
+                    $timeout(function(){
+                        mapHandler(values[0]);
+                    },
+                    500),
+                    $timeout(function(){
+                        drawMatrix(values[2]);  
+                    },
+                    500),
+                    $timeout(function(){
+                        drawPolygons(values[1]);
+                    },
+                    500)
+                ).then(function(){
+                    $scope.loadingApp = false ;
+                });
 
             });
 
@@ -54,18 +77,38 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
                         geometry:e,
                     });
                 }
+
+
+                $timeout(function(){
+                    $('.departamento.animated')
+                },3000);
+
+
             }
 
             function mapHandler(leMap){
                 $scope.map = {
                     model: leMap,
-                    center: "-34.628767838201036,-58.542341058691335",
+                    center:  {lat:-34.69759025633039 , lng: -58.627166748046875},
+                    caba: {
+                        center: {lat: -34.628264216994054, lng: -58.450870513916016},
+                        zoom:12
+                    },
+                    amba:{
+                        center:  {lat:-34.69759025633039 , lng: -58.627166748046875},
+                        zoom:9
+                    },
                     active: false,
                     reCenter: function() {
                         $scope.map.model.setCenter($scope.map.center);
+                    },
+                    focus:function (on){
+                        $scope.map.model.setView($scope.map[on].center,$scope.map[on].zoom,{animate:true});
+                        //$scope.map.model.setZoom($scope.map[on].zoom);
                     }
                 };                
-                $scope.map.model.setView({ 'lat': parseFloat('-34.628767838201036'), 'lng': parseFloat('-58.542341058691335') }, 12);
+
+                //$scope.map.model.setView({ 'lat': parseFloat('-34.628767838201036'), 'lng': parseFloat('-58.542341058691335') }, 12);
             }
 
             function drawPolygons(data){
@@ -82,7 +125,7 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
                             $scope.vm.open(id);
                             $scope.$apply();
                         });
-                    },100*i);
+                    },50*i);
 
 
 

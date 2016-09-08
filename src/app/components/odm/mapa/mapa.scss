@@ -113,8 +113,8 @@
 path.departamento{
 	transition-property:fill,fill-opacity,stroke,background;
 	transition-duration:1s;	
-
-	animation: appears 1s ;
+	//animation: appears 1s ;
+	stroke: rgba(244, 97, 59, 0.25);
 }
 
 

@@ -1,12 +1,12 @@
-angular.module('matrizOdSube').factory('LeafletServices', ['$http','$q' , leafletServices]);
+angular.module('matrizOdSube').factory('LeafletServices', ['$timeout','$http','$q' , leafletServices]);
 
-function leafletServices($http,$q){
-	self = this ;
-	self.OSM;
-	self.map;
-	self.polygons = [] ;
+function leafletServices($timeout,$http,$q){
+	service = this ;
+	service.OSM;
+	service.map;
+	service.polygons = [] ;
 
-	self.highlightStyle = {
+	service.highlightStyle = {
 		// origin : {
 		// 	color: 'rgb(0,0,0)',
 		// 	opacity: 1 ,
@@ -27,11 +27,11 @@ function leafletServices($http,$q){
 
 
 	function getMap(){
-		return self.map;
+		return service.map;
 	}
 
 	function getLayers(){
-		return self.OSM;
+		return service.OSM;
 	}
 
     // function genStyle(){
@@ -47,42 +47,42 @@ function leafletServices($http,$q){
 	function initMap(data){
 
 		var promise = $q(function (success,fail){
-            //self.OSM = L.tileLayer.provider('OpenStreetMap.HOT');
-            self.OSM = L.tileLayer.provider('OpenStreetMap');
-            self.map = L.map('map', {
+            //service.OSM = L.tileLayer.provider('OpenStreetMap.HOT');
+            service.OSM = L.tileLayer.provider('OpenStreetMap');
+            service.map = L.map('map', {
                 zoomControl: false,
-                center: [-34.6192103, -58.429606],
-                layers: self.OSM,
-                zoom: 12
+                center: [-34.69759025633039, -58.627166748046875],
+                layers: service.OSM,
+                zoom: 9
             });
-            self.OSM.on("load", function callmeOnce() {
-               	success(self.map);
-                self.OSM.off("load", callmeOnce);
+            service.OSM.on("load", function callmeOnce() {
+               	success(service.map);
+                service.OSM.off("load", callmeOnce);
             });
+
+
+
+            service.map.on("zoomstart", function () {
+       			service.polygons.forEach( function(element, index) {
+       				console.log(element);
+       			});
+            });
+
 		});
             return promise ; 
 	}
 
 	function Polygon(data,openCallBack){
-		
-
-		
-
-
-		this.style = data.style; 
-		this.anchorPoint = getUpperPoint(data.geometry);
-		var poly = this;
-
-
-
-
-		this.polygon = L.geoJson(data.geometry,{
-			style:this.style,
-		 	className:data.geometry.properties.depto+" departamento",
+		var self = this;
+		self.style = data.style; 
+		self.anchorPoint = getUpperPoint(data.geometry);
+		self.polygon = L.geoJson(data.geometry,{
+			style:self.style,
+		 	className:data.geometry.properties.depto+" departamento animated",
  		  	onEachFeature: function (feature, layer) {
 
 					//.bindLabel('Look revealing label!')
-			  		//layer.bindLabel(feature.properties.depto, { 'noHide': true }).addTo(self.map);
+			  		//layer.bindLabel(feature.properties.depto, { 'noHide': true }).addTo(service.map);
 		     		layer.on('click',clickHandler);
 			     	function clickHandler(){			          
 			        	console.log(feature.properties);
@@ -95,25 +95,21 @@ function leafletServices($http,$q){
 					var popup = L.popup()
 					    //.setLatLng(poly.anchorPoint)
 						.setLatLng(layer.getBounds().getCenter())
-
 					    .setContent('<p>Departamento '+parseInt(data.geometry.properties.depto)+'<br/>  </p>');
-					 
-
-
-
+					
 					layer.bindPopup(popup);
 			        layer.on('mouseover', function (e) {
-			            this.openPopup();
-			            poly.polygon.bringToFront();
+			           // self.polygon.openPopup();
+			            self.polygon.bringToFront();
 			        });
 			        // layer.on('mouseout', function (e) {
-			        //     this.closePopup();
+			        //     self.closePopup();
 			        // });
 				}
-		}).addTo(self.map);
+		}).addTo(service.map);
 
 		var PolyIcon = L.divIcon({
-			className: 'polygon-marker ' +data.geometry.properties.depto ,
+			className: 'polygon-marker ' +data.geometry.properties.depto  + (parseInt(data.geometry.properties.depto)<=15)? 'caba':'',
 			html:	'<div class="marker-content">'+
 						'<div class="marker-border">'+
 							parseInt(data.geometry.properties.depto)+
@@ -122,21 +118,30 @@ function leafletServices($http,$q){
 		});
 			// you can set .my-div-icon styles in CSS
 
-		this,marker = L.marker(this.polygon.getBounds().getCenter(), {icon: PolyIcon}).on('click',function(){
+		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: PolyIcon}).on('click',function(){
 			openCallBack(parseInt(data.geometry.properties.depto));
-		}).addTo(self.map);
+		}).addTo(service.map);
 
-		this.focus = function () {
-			self.map.fitBounds(this.polygon.getBounds());
+		self.focus = function () {
+			service.map.fitBounds(self.polygon.getBounds());
 
-       		//self.map.setView(this.polygon.getBounds().getCenter());
-			self.map.zoomOut();
+       		//service.map.setView(self.polygon.getBounds().getCenter());
+			service.map.zoomOut();
 		}
-		this.highlight = function (type,style) {
-            this.polygon.setStyle(style);
+		self.highlight = function (type,style) {
+            self.polygon.setStyle(style);
 		}
-		this.unHighlight = function () {
-			this.polygon.setStyle(this.style)
+		self.unHighlight = function () {
+			self.polygon.setStyle(self.style);
+		}
+
+
+		self.hideMarker = function (){
+			service.map.removeLayer(self.marker);
+		}
+
+		self.showMarker = function (){
+			self.marker.addTo(service.map);
 		}
 
 		function getUpperPoint(data){
@@ -158,12 +163,12 @@ function leafletServices($http,$q){
 
 	function drawPoly(data,openCallBack){
 		
-		self.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data,openCallBack) ;
+		service.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data,openCallBack) ;
 
 		//console.log("polygon: "+ data.geometry.properties.depto+ "    added");
- 		//L.circleMarker(polygon.getBounds().getCenter()).bindLabel( data.properties, {noHide:true}).addTo(self.map);
+ 		//L.circleMarker(polygon.getBounds().getCenter()).bindLabel( data.properties, {noHide:true}).addTo(service.map);
 		//polygon.bindLabel()
-		 //label = new L.Label(data.geometry.properties.depto).addTo(self.map);
+		 //label = new L.Label(data.geometry.properties.depto).addTo(service.map);
 		// label.setContent(data.geometry.properties.depto);
 		// label.setLatLng(polygon.getBounds().getCenter());
 		// map.showLabel(label);
@@ -175,7 +180,7 @@ function leafletServices($http,$q){
 		
 
 
-		L.geoJson(data.geometry).addTo(self.map);
+		L.geoJson(data.geometry).addTo(service.map);
 	}
 
 	return {
@@ -184,7 +189,7 @@ function leafletServices($http,$q){
 		getLayers : getLayers,
 		drawPoly  : drawPoly,
 		drawPath  : drawPath,
-		polygons  : self.polygons
+		polygons  : service.polygons
 	} ;
 
 }

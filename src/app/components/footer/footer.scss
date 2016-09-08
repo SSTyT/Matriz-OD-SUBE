@@ -22,8 +22,13 @@ footer{
 
 	.brand-logo{
 		width: 20vw;
-		min-height: 5vw;
+		min-height: 1vw;
 		//outline:15px solid red;
 
 	}
+}
+
+
+footer.hidden{
+	bottom:100%;
 }

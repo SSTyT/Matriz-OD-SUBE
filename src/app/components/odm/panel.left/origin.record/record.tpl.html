@@ -1,25 +1,28 @@
 <div class='origin-record'>
 	<!-- <div class='clickOverlay'  ng-mouseover="$ctrl.record.highlight()" ng-mouseleave="$ctrl.record.unHighlight($ctrl.record.departamento,vm.current)"  ng-click="vm.open($ctrl.record.departamento)"></div> -->
 	<div class='departures'>
-		<span class='department'  ng-style={background:$ctrl.record.style.color}>
-			<div class="label">
-				{{$ctrl.record.departamento}}
+		<span class='department'  ng-style={background:$ctrl.record.style.color} ng-mouseover="$ctrl.record.highlight()" ng-mouseleave="$ctrl.record.unHighlight()">
+			<div class="id-wrapper">
+				<div class="id-border">
+					{{$ctrl.record.departamento}}
+				</div>
 			</div>
-			<div class="ver"  ng-click="vm.open($ctrl.record.departamento)">
-				VER
-			</div>
+<!-- 			<div class="ver"  ng-click="$ctrl.vm.open($ctrl.record.departamento)">
+				VER {{$sctrl.model}}
+			</div> -->
 		</span>
 		<span class='resume'>
 			<div class="record-value">
-				<!-- <div class='value'>Total <span> {{$ctrl.record.total}}</span> </div> -->
 				<span class='background total'  	ng-mouseover="$ctrl.hover('total')" 	ng-style={background:$ctrl.record.style.color}> </span>
+			</div>
+			<div class="record-value">
+				<!-- <div class='value'>Total <span> {{$ctrl.record.total}}</span> </div> -->
 				<span class='background colectivo'	ng-mouseover="$ctrl.hover('colectivo')" ng-style="{width:$ctrl.record.porcentaje.colectivo.toFixed(0)+'%'}"></span>
 				<span class='background tren'  		ng-mouseover="$ctrl.hover('tren')"		ng-style="{width:$ctrl.record.porcentaje.tren.toFixed(0) +'%'}"></span>
 				<span class='background subte' 		ng-mouseover="$ctrl.hover('colectivo')" ng-style="{width:$ctrl.record.porcentaje.subte.toFixed(0)+'%'}"></span>
 			</div>
 
 <!-- 			<div class='record-value transboarding'>
-				
 					<div class="background" ng-style="{width:$ctrl.record.porcentaje.transbordo+'%'}"></div>
 					<div class="background-media" ng-style="{width:$ctrl.model.medias.transbordo_porcentaje+'%'}"></div>
 			</div>
@@ -28,7 +31,7 @@
 					<div class="background" ng-style="{width:$ctrl.record.porcentaje.atributo+'%'}"></div>
 					<div class="background-media" ng-style="{width:$ctrl.model.medias.atributo_porcentaje+'%'}"></div>
 			</div> -->
-			<div>{{$ctrl.show}}</div>
+			<div class="record-show">{{$ctrl.show}}</div>
 		</span>
 	</div>
 

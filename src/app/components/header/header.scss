@@ -18,7 +18,8 @@
         .title{
             padding: 0 .5em;
         	font-size: 3em;
-        	font-weight: bold;
+        	// font-weight: bold;
+            letter-spacing: 6px;
         }
         
         .sub-title{
@@ -88,10 +89,10 @@
         width: 56px;
         .spinner{
             opacity:1;
-              height: 28px;
-  width: 28px;
-    border: 8px solid #1D1C1A;
-      border-right-color: transparent;
+            height: 28px;
+            width: 28px;
+            border: 4px solid #1D1C1A;
+            border-right-color: transparent;
         }
     }
 
@@ -108,7 +109,7 @@
   height: 28px;
   width: 28px;
   animation: rotate 0.8s infinite linear;
-  border: 8px solid #1D1C1A;
+  border: 4px solid #1D1C1A;
   border-right-color: transparent;
   border-radius: 50%;
 }

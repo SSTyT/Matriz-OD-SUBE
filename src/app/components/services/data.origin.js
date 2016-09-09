@@ -278,9 +278,10 @@ function DataOrigin($http, $q,LeafletServices) {
             console.log(report);
             function paintPolygons(element,index){
                 var style = {} ; 
-
+                var current = LeafletServices.polygons[element] ; 
                     if ( self.detail.destination[element] !== undefined){
                         style = self.detail.destination[element].style;
+                         current.highlight('destination',style);
                         //report.destino.push(element) ;
                     }else{
                         style ={
@@ -289,10 +290,13 @@ function DataOrigin($http, $q,LeafletServices) {
                             fillOpacity: 0.95,
                             strokeOpacity:1
                         };
+                         current.highlight('destination',style);
+                         current.setTinyIcon();
+
                         //report.gris.push(element) ;
                     }
                 
-                LeafletServices.polygons[element].highlight('destination',style);
+               
                //  if(element !== self.departamento){
 
                 // LeafletServices.polygons[element].hideMarker();
@@ -310,12 +314,12 @@ function DataOrigin($http, $q,LeafletServices) {
 
 
 
-        this.unHighlight = function (id,current) {
-            if ( (current !== undefined) &&(id !== current.departamento )){
+        this.unHighlight = function (current) {
+            //if ( (current !== undefined) &&(id !== current.departamento )){
                 model.departamentos.forEach(normalizePolygons);
                 function normalizePolygons(element,index){
                     LeafletServices.polygons[element].unHighlight();
-                    LeafletServices.polygons[element].showMarker();
+                    LeafletServices.polygons[element].restoreIcon();
                 }
             }
 
@@ -323,7 +327,7 @@ function DataOrigin($http, $q,LeafletServices) {
             //     LeafletServices.polygons[element.departamento].unHighlight();
             // });
            // LeafletServices.polygons[this.departamento].unHighlight();
-        };
+        //};
 
     };
 

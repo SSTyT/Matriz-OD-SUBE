@@ -62,28 +62,20 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
 
 
             function drawTransport(coles,subtes,trenes){
-
-
                 console.log(coles);
                 console.log(subtes);
                 console.log(trenes);
-
-                  coles.forEach(pintar);
-                  //subtes.forEach(pintar);
-                  //trenes.forEach(pintar);
-
+                coles.forEach(pintar);
+                //subtes.forEach(pintar);
+                //trenes.forEach(pintar);
                 function pintar(e,i){
                     LeafletServices.drawPath({
                         geometry:e,
                     });
                 }
-
-
                 $timeout(function(){
                     $('.departamento.animated')
                 },3000);
-
-
             }
 
             function mapHandler(leMap){

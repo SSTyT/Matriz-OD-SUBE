@@ -65,15 +65,15 @@ function leafletServices($timeout,$http,$q){
             service.map.on("zoomend", function () {
        			service.polygons.forEach( function(element, index) {
        			
-
-					if (element.id <= 15){
-						console.log(element);
-	       				if (service.map.getZoom() <= 10){
-	       					element.setTinyIcon();
-	       				}else{
-	       					element.setIcon();
-	       				}
-					}
+       				element.restoreIcon()
+					// if (element.id <= 15){
+					// 	console.log(element);
+	    //    				if (service.map.getZoom() <= 10){
+	    //    					element.setTinyIcon();
+	    //    				}else{
+	    //    					element.setIcon();
+	    //    				}
+					// }
 
        			});
             });
@@ -174,6 +174,20 @@ function leafletServices($timeout,$http,$q){
 			self.marker.setIcon(tinyIcon);
 		}
 		self.setIcon = function (){
+			self.marker.setIcon(icon);
+		}
+
+		self.restoreIcon = function (){
+					if (self.id <= 15){
+					
+	       				if (service.map.getZoom() <= 10){
+	       					self.setTinyIcon();
+	       				}else{
+	       					self.setIcon();
+	       				}
+					}
+
+			
 			self.marker.setIcon(icon);
 		}
 

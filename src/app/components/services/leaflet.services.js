@@ -60,21 +60,10 @@ function leafletServices($timeout,$http,$q){
                 service.OSM.off("load", callmeOnce);
             });
 
-
-
             service.map.on("zoomend", function () {
        			service.polygons.forEach( function(element, index) {
        			
        				element.restoreIcon()
-					// if (element.id <= 15){
-					// 	console.log(element);
-	    //    				if (service.map.getZoom() <= 10){
-	    //    					element.setTinyIcon();
-	    //    				}else{
-	    //    					element.setIcon();
-	    //    				}
-					// }
-
        			});
             });
 
@@ -96,7 +85,8 @@ function leafletServices($timeout,$http,$q){
 					//.bindLabel('Look revealing label!')
 			  		//layer.bindLabel(feature.properties.depto, { 'noHide': true }).addTo(service.map);
 		     		layer.on('click',clickHandler);
-			     	function clickHandler(){			          
+			     	function clickHandler(event){		
+			     	 	event.target.closePopup();	          
 			        	console.log(feature.properties);
 			        	openCallBack(parseInt(data.geometry.properties.depto));
 			      	}
@@ -107,16 +97,14 @@ function leafletServices($timeout,$http,$q){
 					var popup = L.popup()
 					    //.setLatLng(poly.anchorPoint)
 						.setLatLng(layer.getBounds().getCenter())
-					    .setContent('<p>Departamento '+parseInt(data.geometry.properties.depto)+'<br/>  </p>');
+					    .setContent('<p> '+data.geometry.properties.departamen+'<br/>  </p>');
 					
-					layer.bindPopup(popup);
+					 layer.bindPopup(popup);
 			        layer.on('mouseover', function (e) {
-			           // self.polygon.openPopup();
+			            self.polygon.openPopup();
 			            self.polygon.bringToFront();
 			        });
-			        // layer.on('mouseout', function (e) {
-			        //     self.closePopup();
-			        // });
+			        
 				}
 		}).addTo(service.map);
 
@@ -178,17 +166,14 @@ function leafletServices($timeout,$http,$q){
 		}
 
 		self.restoreIcon = function (){
-					if (self.id <= 15){
-					
-	       				if (service.map.getZoom() <= 10){
-	       					self.setTinyIcon();
-	       				}else{
-	       					self.setIcon();
-	       				}
+			if (self.id <= 15){
+					if (service.map.getZoom() <= 10){
+						self.setTinyIcon();
+					}else{
+						self.setIcon();
 					}
-
-			
-			self.marker.setIcon(icon);
+			}			
+			//self.marker.setIcon(icon);
 		}
 
 		function getUpperPoint(data){

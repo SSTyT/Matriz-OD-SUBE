@@ -11,6 +11,7 @@ function DataOrigin($http, $q,LeafletServices) {
     //var urlZones  = 'assets/zonas.g.geojson';
     var urlZones  = 'assets/data/departamentos.geojson';
     var urlMatriz = 'assets/salida3.json';
+    var urlDiccionario = 'assets/data/diccionario.json';
 
     var urlColectivos = 'assets/bondies.geojson';
     var urlTrenes = 'assets/train.geojson';
@@ -184,7 +185,16 @@ function DataOrigin($http, $q,LeafletServices) {
        }
     }
 
-    var ODRegister = function (data){
+    function getId(prov,depto){
+        function pad(num, size) {
+            var s = "000000000" + num;
+            return s.substr(s.length-size);
+        }
+
+        return  ""+prov+pad(depto,3);
+    }
+
+    var ODRegister = function (data,diccionario){
         var self = this;
         this.atributo = data.cantidad_as ;
         this.colectivo = data.cantidad_bus ;
@@ -192,6 +202,8 @@ function DataOrigin($http, $q,LeafletServices) {
         this.transbordo = data.cantidad_transbordo ;
         this.tren = data.cantidad_tren ;
         this.departamento = data.depto_origen ;
+        this.id = getId(data.prov_origen,data.depto_origen) ; 
+        this.nombre = diccionario[this.id].lbl ; 
        // this.hora_incio = data.hora_incio ;
        // this.pobl2010_destino = data.pobl2010_destino ;
        // this.pobl2010_origen = data.pobl2010_origen ;
@@ -243,57 +255,38 @@ function DataOrigin($http, $q,LeafletServices) {
 
 
         //comportamiento
-        this.selectAs = function(type){
-
-        };
+        this.selectAs = function(type){};
         
+        this.markAsDestination   = function(){}
 
-        this.markAsDestination   = function(){
+        this.unMarkAsDestination = function(){}
 
-        }
+        this.drawLineTo = function(){}
 
-        this.unMarkAsDestination = function(){
-
-        }
-
-        this.drawLineTo = function(){
-
-        }
-
-        this.eraseLine  = function(){
-            
-        }
-
-
-
+        this.eraseLine  = function(){}
 
         this.highlight = function () {
             console.log("highlight" + this.departamento);
 
-            var report =  {
-                origen: '',
-                destino: [],
-                gris : []
-            } ; 
             model.departamentos.forEach(paintPolygons);
-            console.log(report);
             function paintPolygons(element,index){
                 var style = {} ; 
                 var current = LeafletServices.polygons[element] ; 
-                    if ( self.detail.destination[element] !== undefined){
-                        style = self.detail.destination[element].style;
-                         current.highlight('destination',style);
-                        //report.destino.push(element) ;
-                    }else{
-                        style ={
-                            weight: 2,
-                            color: 'rgb(230,230,230)',
-                            fillOpacity: 0.95,
-                            strokeOpacity:1
-                        };
-                         current.highlight('destination',style);
-                         current.setTinyIcon();
-
+                    if ( self.detail.destination[element] !== undefined)
+                        {
+                            style = self.detail.destination[element].style;
+                            current.highlight('destination',style);
+                         }
+                    else
+                        {
+                            style ={
+                                weight: 2,
+                                color: 'rgb(230,230,230)',
+                                fillOpacity: 0.95,
+                                strokeOpacity:1
+                            };
+                            current.highlight('destination',style);
+                         //current.setTinyIcon();
                         //report.gris.push(element) ;
                     }
                 
@@ -320,7 +313,7 @@ function DataOrigin($http, $q,LeafletServices) {
                 model.departamentos.forEach(normalizePolygons);
                 function normalizePolygons(element,index){
                     LeafletServices.polygons[element].unHighlight();
-                    LeafletServices.polygons[element].restoreIcon();
+                   // LeafletServices.polygons[element].restoreIcon();
                 }
             }
 
@@ -331,12 +324,29 @@ function DataOrigin($http, $q,LeafletServices) {
         //};
 
     };
+    function prepararDiccionario(dicc){
+        var out = [] ;
 
-    function cookOD(data){
+        dicc.forEach(recorrer);
+        function recorrer(element,index){
+            //{"Cod_depto":882,"Departamento":"Z�rate","id":6882,"Provincia":"Buenos Aires","Cod_prov":6}
+            out[element.id] =  {
+                dpto : element.Cod_depto,
+                prov : element.Cod_prov,
+                  id : element.id,
+                lbl  : element.Departamento,
+            };
+        }
+
+        return out;
+    }
+
+    function cookOD(data,diccionario){
         data.forEach( function(element, index) {
             //console.log(element.hora_inicio);
             if (bigTable[element.depto_origen] ==  undefined) { 
-                    bigTable[element.depto_origen] = new ODRegister(element);
+
+                    bigTable[element.depto_origen] = new ODRegister(element,diccionario);
                     model.matriz.push(bigTable[element.depto_origen]);
                     model.departamentos.push(element.depto_origen);
             }
@@ -429,21 +439,7 @@ function DataOrigin($http, $q,LeafletServices) {
                 r = parseInt((param/module).map(min/module,(max-min)/module,model.colors.med.r,model.colors.max.r));
                 g = parseInt((param/module).map(min/module,(max-min)/module,model.colors.med.g,model.colors.max.g));
                 b = parseInt((param/module).map(min/module,(max-min)/module,model.colors.med.b,model.colors.max.b));
-                
             }
-            // if( param <= max*.5){
-            //     //console.log("mitad inferior");
-            //     r = parseInt(param.map(min,max*.5,model.colors.min.r,model.colors.med.r));
-            //     g = parseInt(param.map(min,max*.5,model.colors.min.g,model.colors.med.g));
-            //     b = parseInt(param.map(min,max*.5,model.colors.min.b,model.colors.med.b));
-            // }else{
-            //     //console.log("mitad superior");
-            //     r = parseInt(param.map(max*.5,max,model.colors.med.r,model.colors.max.r));
-            //     g = parseInt(param.map(max*.5,max,model.colors.med.g,model.colors.max.g));
-            //     b = parseInt(param.map(max*.5,max,model.colors.med.b,model.colors.max.b));
-            
-            // }
-
             return 'rgb('+r+','+g+','+b+')';
         }
 
@@ -508,10 +504,32 @@ function DataOrigin($http, $q,LeafletServices) {
 
     function getODData() {
         var promise = $q(function(success, reject) {
-            $http.get(urlMatriz).success(function(res) {
-                    success(cookOD(res));
-            });
+            var promises = [] ;
+            // $http.get(urlMatriz).success(function(res) {
+            //         success(cookOD(res));
+            // });
+
+            promises.push($http.get(urlMatriz));
+            promises.push($http.get(urlDiccionario));
+            // $http.get(urlDiccionario).success(function(diccionario) {
+                    
+            // });
+
+
+            $q.all(promises).then(recordsHandler);
+            function recordsHandler(data){
+
+
+
+                success(cookOD(data[0].data,prepararDiccionario(data[1].data)));
+            }
+
+
+
         });
+
+
+
         return promise;
     };
 
@@ -525,6 +543,15 @@ function DataOrigin($http, $q,LeafletServices) {
         return promise;
     };
 
+    function getDiccionario(){
+        var promise = $q(function(success, reject) {
+            $http.get(urlDiccionario).success(function(res) {
+                success(res.features);
+                //success(sortTheMotherfuckers(res,'depto'));
+            });
+        });
+        return promise;
+    };
     function getColectivos(){
                 var promise = $q(function(success, reject) {
             $http.get(urlColectivos).success(function(res) {
@@ -556,12 +583,13 @@ function DataOrigin($http, $q,LeafletServices) {
     }
 
     return {
-        getColectivos : getColectivos,
-        getODData : getODData,
-        getSubtes : getSubtes,
-        getTrenes : getTrenes,
-        getZonas : getZonas,
-        record : bigTable
+        getColectivos  : getColectivos,
+        getDiccionario : getDiccionario,
+        getODData      : getODData,
+        getSubtes      : getSubtes,
+        getTrenes      : getTrenes,
+        getZonas       : getZonas,
+        record         : bigTable
     };
 }
 

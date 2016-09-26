@@ -7,18 +7,18 @@ var odRecord = {
         bindings: {
             record: '<',
             model: '<',
-            vm: '=',
+            odm: '=',
         },
         controller: 'odRecordController'
     };
 
 angular.module('matrizOdSube').component('odRecord',odRecord);
-angular.module('matrizOdSube').controller('odRecordController', ['$timeout',odRecordController]);
-function odRecordController (){
+angular.module('matrizOdSube').controller('odRecordController', ['$timeout','$scope',odRecordController]);
+function odRecordController ($timeout,$scope){
     this.show = "Total: " + this.record.total+" viajes ";
     this.hover = function(field){
         console.log("call me ");
-        console.log(this.model);
+        console.log($scope);
 
         if (field == 'total'){
               this.show = field+" " + this.record[field]+" viajes ";

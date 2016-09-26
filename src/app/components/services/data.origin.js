@@ -8,7 +8,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
     //var urlZones  = 'assets/zonas.geojson';
     //var urlZones  = 'assets/disolve_by_locate_depart.geojson';
-    var urlZones  = 'assets/zonas.g.geojson';
+    //var urlZones  = 'assets/zonas.g.geojson';
+    var urlZones  = 'assets/data/departamentos.geojson';
     var urlMatriz = 'assets/salida3.json';
 
     var urlColectivos = 'assets/bondies.geojson';

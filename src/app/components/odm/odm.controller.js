@@ -47,11 +47,17 @@
       };
 
       this.close = function (){
-                $scope.showDetail = false;
-                $scope.current.record.unHighlight();
+        $scope.showDetail = false;
+        $scope.current.record.unHighlight();
       //hide left pannel content
       //hide right pannel content
       //normalize highlited zones
     };
+
+
+    $scope.odm = {
+      open : this.open,
+      close : this.close
+    } ;
   }
 

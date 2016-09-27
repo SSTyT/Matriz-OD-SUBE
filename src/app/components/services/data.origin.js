@@ -9,15 +9,23 @@ function DataOrigin($http, $q,LeafletServices) {
     //var urlZones  = 'assets/zonas.geojson';
     //var urlZones  = 'assets/disolve_by_locate_depart.geojson';
     //var urlZones  = 'assets/zonas.g.geojson';
-    var urlZones  = 'assets/data/departamentos.geojson';
-    var urlMatriz = 'assets/salida3.json';
+    var urlZones       = 'assets/data/departamentos.geojson';
     var urlDiccionario = 'assets/data/diccionario.json';
+    var urlMatriz      = 'assets/data/matriz.json';
 
-    var urlColectivos = 'assets/bondies.geojson';
-    var urlTrenes = 'assets/train.geojson';
-    var urlSubte = 'assets/subway.geojson';
+    var urlColectivos  = 'assets/data/bondies.geojson';
+    var urlTrenes      = 'assets/data/train.geojson';
+    var urlSubte       = 'assets/data/subway.geojson';
 
+    //helpers
+    function getId(prov,depto){
+        function pad(num, size) {
+            var s = "000000000" + num;
+            return s.substr(s.length-size);
+        }
 
+        return  ""+prov+pad(depto,3);
+    }
 
     //var urlMatriz = 'assets/subedatos.json';
 
@@ -185,14 +193,7 @@ function DataOrigin($http, $q,LeafletServices) {
        }
     }
 
-    function getId(prov,depto){
-        function pad(num, size) {
-            var s = "000000000" + num;
-            return s.substr(s.length-size);
-        }
 
-        return  ""+prov+pad(depto,3);
-    }
 
     var ODRegister = function (data,diccionario){
         var self = this;

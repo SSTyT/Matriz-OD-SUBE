@@ -7,11 +7,6 @@ function leafletServices($timeout,$http,$q){
 	service.polygons = [] ;
 
 	service.highlightStyle = {
-		// origin : {
-		// 	color: 'rgb(0,0,0)',
-		// 	opacity: 1 ,
-		// 	weight: 5 
-		// },
 		origin : {
 			color: 'rgb(0,0,0)',
 			opacity: 1 ,
@@ -34,16 +29,23 @@ function leafletServices($timeout,$http,$q){
 		return service.OSM;
 	}
 
-    // function genStyle(){
-    //     function randomChannel(){return parseInt((Math.random()*255));}
-    //     var myStyle = {
-    //         "color": "rgba("+randomChannel()+","+randomChannel()+","+randomChannel()+",1)",
-    //         "weight": 1,
-    //         "opacity": 0.95
-    //     }
-    //     return myStyle;
-    // }
-
+function get_polygon_centroid(pts) {
+   var first = pts[0], last = pts[pts.length-1];
+   if (first[0] != last[0] || first[1] != last[1]) pts.push(first);
+   var twicearea=0,
+   x=0, y=0,
+   nPts = pts.length,
+   p1, p2, f;
+   for ( var i=0, j=nPts-1 ; i<nPts ; j=i++ ) {
+      p1 = pts[i]; p2 = pts[j];
+      f = p1[0]*p2[1] - p2[0]*p1[1];
+      twicearea += f;          
+      x += ( p1[0] + p2[0] ) * f;
+      y += ( p1[1] + p2[1] ) * f;
+   }
+   f = twicearea * 3;
+   return { x:x/f, y:y/f };
+}
 	function initMap(data){
 
 		var promise = $q(function (success,fail){
@@ -74,7 +76,7 @@ function leafletServices($timeout,$http,$q){
 	function Polygon(data,openCallBack){
 		var self = this;
 		self.style = data.style; 
-		//self.anchorPoint = getUpperPoint(data.geometry);
+		self.centroid = get_polygon_centroid(data.geometry.geometry.coordinates[0][0]);
 		
 		self.id = parseInt(data.geometry.properties.depto);
 		self.polygon = L.geoJson(data.geometry,{
@@ -86,7 +88,7 @@ function leafletServices($timeout,$http,$q){
 			  		//layer.bindLabel(feature.properties.depto, { 'noHide': true }).addTo(service.map);
 		     		layer.on('click',clickHandler);
 			     	function clickHandler(event){		
-			     	 	event.target.closePopup();	          
+			     	 	 event.originalEvent.preventDefault();
 			        	console.log(feature.properties);
 			        	openCallBack(parseInt(data.geometry.properties.depto));
 			      	}
@@ -95,8 +97,8 @@ function leafletServices($timeout,$http,$q){
 			      	//console.log(layer.getBounds().getCenter());
 
 					var popup = L.popup()
-					    //.setLatLng(poly.anchorPoint)
-						.setLatLng(layer.getBounds().getCenter())
+					    .setLatLng(self.centroid)
+						//.setLatLng(layer.getBounds().getCenter())
 					    .setContent('<p> '+data.geometry.properties.departamen+'<br/>  </p>');
 					
 					 layer.bindPopup(popup);

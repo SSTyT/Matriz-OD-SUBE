@@ -33,10 +33,10 @@ function odRightPanel($timeout,DataOrigin) {
                         $scope.rightPanel.list.push(element);
                     }
 
-                        $scope.rightPanel.list.sort(sortFunction);
-                        function sortFunction(a,b){
-                            return b.total - a.total ;
-                        }
+                    $scope.rightPanel.list.sort(sortFunction);
+                    function sortFunction(a,b){
+                        return b.total - a.total ;
+                    }
 
             };
 

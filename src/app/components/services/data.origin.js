@@ -156,7 +156,7 @@ function DataOrigin($http, $q,LeafletServices) {
             this.tren = data.cantidad_tren ;
             this.total =  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
             this.departamento = parseInt(data.depto_destino);
-
+            
             this.add = function (data){
                 this.atributo += data.cantidad_as ;
                 this.colectivo += data.cantidad_bus ;
@@ -182,6 +182,7 @@ function DataOrigin($http, $q,LeafletServices) {
         this.destinationsByHour = [] ;
         this.destination = {};
         this.destinationID = [];
+        this.destinationSortedByID = [] ;
         this.update = function (data){
             if (this.destination[parseInt(data.depto_destino)] === undefined){
                 this.destination[parseInt(data.depto_destino)] = new DestinationRegister(data);  
@@ -269,7 +270,35 @@ function DataOrigin($http, $q,LeafletServices) {
         this.highlight = function () {
             console.log("highlight" + this.departamento);
 
+
+    
+        
+            var origin = LeafletServices.polygons[this.departamento].centroid;
+
+
+        
+            var collection = this.detail.destinationSortedByID ; 
+
+            var i = 0 ;
+            
+            var pairs = [] ; 
+
+            while (i < 5 && i <  collection.length) {
+                var destination = LeafletServices.polygons[collection[i]].centroid ; 
+               
+                
+                pairs.push([origin,destination]);
+                i++;
+            }
+
+            LeafletServices.drawPairs(pairs);
+
+           // var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
             model.departamentos.forEach(paintPolygons);
+
+
+
             function paintPolygons(element,index){
                 var style = {} ; 
                 var current = LeafletServices.polygons[element] ; 
@@ -287,23 +316,9 @@ function DataOrigin($http, $q,LeafletServices) {
                                 strokeOpacity:1
                             };
                             current.highlight('destination',style);
-                         //current.setTinyIcon();
-                        //report.gris.push(element) ;
+                            current.setHiddenIcon();
                     }
-                
-               
-               //  if(element !== self.departamento){
-
-                // LeafletServices.polygons[element].hideMarker();
-                     
-                // }
             }
-
-            // this.detail.destination.forEach( function(element) {
-            //     LeafletServices.polygons[element.departamento].highlight('destination',element.style);
-            // });
-           // LeafletServices.polygons[this.departamento].highlight('origin',this.style);
-            //LeafletServices.polygons[this.departamento].focus();
 
         };
 
@@ -312,17 +327,12 @@ function DataOrigin($http, $q,LeafletServices) {
         this.unHighlight = function (current) {
             //if ( (current !== undefined) &&(id !== current.departamento )){
                 model.departamentos.forEach(normalizePolygons);
+                LeafletServices.clearPairs();
                 function normalizePolygons(element,index){
                     LeafletServices.polygons[element].unHighlight();
-                   // LeafletServices.polygons[element].restoreIcon();
+                    LeafletServices.polygons[element].restoreIcon();
                 }
             }
-
-            // this.detail.destination.forEach( function(element) {
-            //     LeafletServices.polygons[element.departamento].unHighlight();
-            // });
-           // LeafletServices.polygons[this.departamento].unHighlight();
-        //};
 
     };
     function prepararDiccionario(dicc){
@@ -421,15 +431,9 @@ function DataOrigin($http, $q,LeafletServices) {
         //calcular el color de cada depto en funcion de su valor total de viajes 
         model.matriz.forEach(paintRecord);
 
-
         function calcTotalColor(param,min,max){
-
             var lower,upper,r,g,b = 0 ;
             
-
-          //  console.log("param> "+param+" max: "+max+ " mitad:"+max*.5);
-
-
             var module = max - min / 57; 
 
              if( param <= max*.5){
@@ -490,10 +494,18 @@ function DataOrigin($http, $q,LeafletServices) {
 
         //ordenar por totales la matriz
         model.matriz.sort(compareFunction)
+
+        model.matriz.forEach(function(element){
+                
+            element.detail.destinationSortedByID = Object.keys(element.detail.destination).sort(sortObject);
+            function sortObject(a,b){
+                return element.detail.destination[b].total - element.detail.destination[a].total ;
+            }
+        })
+
         function compareFunction(a,b){
             return b.total - a.total ;
         }
-
         // model.matriz.forEach(sortChildren);
         // function sortChildren(element,index){
         //     element.detail.destination.sort(compareFunction);

@@ -5,7 +5,7 @@ function leafletServices($timeout,$http,$q){
 	service.OSM;
 	service.map;
 	service.polygons = [] ;
-
+	service.currentPairs = [] ;
 	service.highlightStyle = {
 		origin : {
 			color: 'rgb(0,0,0)',
@@ -29,23 +29,26 @@ function leafletServices($timeout,$http,$q){
 		return service.OSM;
 	}
 
-function get_polygon_centroid(pts) {
-   var first = pts[0], last = pts[pts.length-1];
-   if (first[0] != last[0] || first[1] != last[1]) pts.push(first);
-   var twicearea=0,
-   x=0, y=0,
-   nPts = pts.length,
-   p1, p2, f;
-   for ( var i=0, j=nPts-1 ; i<nPts ; j=i++ ) {
-      p1 = pts[i]; p2 = pts[j];
-      f = p1[0]*p2[1] - p2[0]*p1[1];
-      twicearea += f;          
-      x += ( p1[0] + p2[0] ) * f;
-      y += ( p1[1] + p2[1] ) * f;
-   }
-   f = twicearea * 3;
-   return { x:x/f, y:y/f };
-}
+	function get_polygon_centroid(pts) {
+	   var first = pts[0], last = pts[pts.length-1];
+	   if (first[0] != last[0] || first[1] != last[1]) pts.push(first);
+	   var twicearea=0,
+	   x=0, y=0,
+	   nPts = pts.length,
+	   p1, p2, f;
+	   for ( var i=0, j=nPts-1 ; i<nPts ; j=i++ ) {
+	      p1 = pts[i]; p2 = pts[j];
+	      f = p1[0]*p2[1] - p2[0]*p1[1];
+	      twicearea += f;          
+	      x += ( p1[0] + p2[0] ) * f;
+	      y += ( p1[1] + p2[1] ) * f;
+	   }
+	   f = twicearea * 3;
+	   return { lng:x/f, lat:y/f };
+	}
+
+
+
 	function initMap(data){
 
 		var promise = $q(function (success,fail){
@@ -83,18 +86,12 @@ function get_polygon_centroid(pts) {
 			style:self.style,
 		 	className:data.geometry.properties.depto+" departamento animated",
  		  	onEachFeature: function (feature, layer) {
-
-					//.bindLabel('Look revealing label!')
-			  		//layer.bindLabel(feature.properties.depto, { 'noHide': true }).addTo(service.map);
-		     		layer.on('click',clickHandler);
+					layer.on('click',clickHandler);
 			     	function clickHandler(event){		
 			     	 	 event.originalEvent.preventDefault();
 			        	console.log(feature.properties);
 			        	openCallBack(parseInt(data.geometry.properties.depto));
 			      	}
-
-			      	//console.log("popup center");
-			      	//console.log(layer.getBounds().getCenter());
 
 					var popup = L.popup()
 					    .setLatLng(self.centroid)
@@ -110,19 +107,20 @@ function get_polygon_centroid(pts) {
 				}
 		}).addTo(service.map);
 
+
+
 		self.focus = function () {
 			service.map.fitBounds(self.polygon.getBounds());
-
        		//service.map.setView(self.polygon.getBounds().getCenter());
 			service.map.zoomOut();
 		}
+
 		self.highlight = function (type,style) {
             self.polygon.setStyle(style);
 		}
 		self.unHighlight = function () {
 			self.polygon.setStyle(self.style);
 		}
-
 
 		self.hideMarker = function (){
 			service.map.removeLayer(self.marker);
@@ -151,10 +149,17 @@ function get_polygon_centroid(pts) {
 						'</div>'+
 					'<div>'
 		});
+		var hiddenIcon = L.divIcon({
+			className: 'polygon-marker '+data.geometry.properties.depto,
+			html:	'<div class="marker-content-tiny">'+
+						'<div class="marker-border">'+
+						'</div>'+
+					'<div>'
+		});
 		
 			// you can set .my-div-icon styles in CSS
 
-		self.marker = L.marker(self.polygon.getBounds().getCenter(), {icon: (data.geometry.properties.depto <= 15 && service.map.getZoom()<=10)? tinyIcon:icon}).on('click',function(){
+		self.marker = L.marker(self.centroid, {icon: (data.geometry.properties.depto <= 15 && service.map.getZoom()<=10)? tinyIcon:icon}).on('click',function(){
 			openCallBack(parseInt(data.geometry.properties.depto));
 		}).addTo(service.map);
 
@@ -166,15 +171,21 @@ function get_polygon_centroid(pts) {
 		self.setIcon = function (){
 			self.marker.setIcon(icon);
 		}
+		self.setHiddenIcon = function (){
+			self.marker.setIcon(hiddenIcon);	
+		}
 
 		self.restoreIcon = function (){
 			if (self.id <= 15){
-					if (service.map.getZoom() <= 10){
-						self.setTinyIcon();
-					}else{
-						self.setIcon();
-					}
-			}			
+				if (service.map.getZoom() <= 10){
+					self.setTinyIcon();
+				}else{
+					self.setIcon();
+				}
+			}
+			else{
+				self.setIcon();
+			}		
 			//self.marker.setIcon(icon);
 		}
 
@@ -208,7 +219,23 @@ function get_polygon_centroid(pts) {
 		// map.showLabel(label);
 	}
 
+	function clearPairs(){
+		service.currentPairs.forEach(cleanCurrent);
 
+		function cleanCurrent(element){
+			service.map.removeLayer(element)
+		}
+	}
+
+	function drawPairs(pairs){
+		clearPairs();
+		service.currentPairs = [] ; 
+		pairs.forEach(draw);
+		function draw(element){
+			service.currentPairs.push( L.polyline(element, {color: 'red',weight:5}).addTo(service.map));
+		}
+	}
+	
 
 	function drawPath(data){
 		
@@ -223,6 +250,7 @@ function get_polygon_centroid(pts) {
 		getLayers : getLayers,
 		drawPoly  : drawPoly,
 		drawPath  : drawPath,
+		drawPairs : drawPairs,
 		polygons  : service.polygons
 	} ;
 

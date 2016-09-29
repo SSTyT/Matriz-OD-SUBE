@@ -66,8 +66,8 @@ function odMap($timeout,$q,LeafletServices,DataOrigin) {
                 console.log(subtes);
                 console.log(trenes);
                 coles.forEach(pintar);
-                //subtes.forEach(pintar);
-                //trenes.forEach(pintar);
+                subtes.forEach(pintar);
+                trenes.forEach(pintar);
                 function pintar(e,i){
                     LeafletServices.drawPath({
                         geometry:e,

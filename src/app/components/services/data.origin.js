@@ -257,48 +257,149 @@ function DataOrigin($http, $q,LeafletServices) {
 
 
         //comportamiento
-        this.selectAs = function(type){};
-        
-        this.markAsDestination   = function(){}
-
-        this.unMarkAsDestination = function(){}
-
-        this.drawLineTo = function(){}
-
-        this.eraseLine  = function(){}
-
-        this.highlight = function () {
-            console.log("highlight" + this.departamento);
 
 
-    
-        
+
+        this.calcEdges = function calcEdges(){
             var origin = LeafletServices.polygons[this.departamento].centroid;
-
-
-        
             var collection = this.detail.destinationSortedByID ; 
 
             var i = 0 ;
-            
-            var pairs = [] ; 
+            var top = 10 ;
+            var edges = [] ;
+            var radiusMax = 20 ;
+            var radiusMin = 15 ;
+            var maxWeight = 40 ;
+            var minWeight = 5  ;
 
-            while (i < 5 && i <  collection.length) {
-                var destination = LeafletServices.polygons[collection[i]].centroid ; 
-               
-                
-                pairs.push([origin,destination]);
-                i++;
+            var total =0 ;
+            var h = 0 ;
+            while (h < top && h <  collection.length-1) {
+                h++;
+                total += this.detail.destination[collection[h]].total;
             }
 
-            LeafletServices.drawPairs(pairs);
 
-           // var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+            function calcWeight(destination,totalWeight,type){
 
+                return  totalWeight * destination.porcentaje[type];
+            }
+
+            function calcOffset(destination,weigth,type){
+                var out = 0;
+                var base = -(weigth*.5);
+                if ( type == 'colectivo' ){
+                    out =  base ; 
+                }else if ( type == 'subte' ){
+                    out = base + calcWeight(destination,'colectivo') ;
+                }else{
+                    out = base +  calcWeight(destination,'colectivo') + calcWeight(destination,'subte');   
+                }
+
+                return out;
+            }
+
+            function map_range(value, low1, high1, low2, high2) {
+                return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+            }
+
+            function getTypification(destination){
+                var out = "";
+                if (destination.colectivo >= destination.tren  ){
+                    if(destination.colectivo >= destination.subte){
+                       out = 'colectivo' ;
+                    }else{
+                        out  =  'subte' ;
+                    }
+                }else{
+                    if(destination.tren >= destination.subte){
+                        out = 'tren';
+                    }
+                    else{
+                        out='subte';
+                    }
+                }
+                return out;
+            }
+            function getColor(destination){
+                var  col  =  model.colors[getTypification(destination)] ;
+                return 'rgb('+col.r+','+col.g+','+col.b+')'
+            }
+
+            function map(current,total,min,max) {
+                var val = ((current*100)/total); 
+                return map_range(val,0,100,min,max);
+            }
+
+            function circleStyle(destination,total){
+                return {
+                    color: getColor(destination),
+                    fillColor: getColor(destination),
+                    fillOpacity: 0.8,
+                    strokeOpacity:1,
+                    radius : map(destination.total,total,radiusMin,radiusMax),
+                    className:'circle '+getTypification(destination)
+                }
+            }
+
+            /*unction edgeStyle(destination,color){
+                return {
+                    color: getColor(destination),
+                    fillColor: getColor(destination),
+                    fillOpacity: 1,
+                    weight: map(destination.total,total,minWeight,maxWeight),
+                    className:'edge '+getTypification(destination),
+                //    offset: Math.random()*15
+                }
+            }*/
+
+            function edgeStyle(destination,total,type){
+
+                var totalWeight =  map(destination.total,total,minWeight,maxWeight);
+                return {
+                    color: getColor(destination),
+                    fillColor: getColor(destination),
+                    fillOpacity: 1,
+                    weight:calcWeight(destination,totalWeight,type),
+                    className:'edge '+getTypification(destination),
+                    offset: calcOffset(destination,totalWeight,type)
+                }
+            }
+
+            while (i < top && i <  collection.length-1) {
+                var destination = LeafletServices.polygons[collection[i]].centroid ; 
+                var destination_record = this.detail.destination[collection[i]];
+
+
+
+
+                //colectivo
+                    //ancho = 
+                //tren
+
+                //subte
+                if (origin === destination){
+                    edges.push({
+                        points:[origin,destination],
+                        style:circleStyle(destination_record,total) 
+                    });
+                }else{
+                    edges.push({
+                        points:[origin,destination],
+                        style: edgeStyle(destination_record,total,'colectivo') 
+                    }); 
+                }
+
+
+                i++;
+            }
+            return edges;  
+        }
+
+        this.highlight = function () {
+            console.log("highlight" + this.departamento);
+            LeafletServices.drawPairs(this.calcEdges());
             model.departamentos.forEach(paintPolygons);
-
-
-
             function paintPolygons(element,index){
                 var style = {} ; 
                 var current = LeafletServices.polygons[element] ; 
@@ -306,6 +407,7 @@ function DataOrigin($http, $q,LeafletServices) {
                         {
                             style = self.detail.destination[element].style;
                             current.highlight('destination',style);
+                            current.restoreIcon();
                          }
                     else
                         {
@@ -506,10 +608,6 @@ function DataOrigin($http, $q,LeafletServices) {
         function compareFunction(a,b){
             return b.total - a.total ;
         }
-        // model.matriz.forEach(sortChildren);
-        // function sortChildren(element,index){
-        //     element.detail.destination.sort(compareFunction);
-        // }
 
         console.log(model);
         return model ; 
@@ -518,31 +616,14 @@ function DataOrigin($http, $q,LeafletServices) {
     function getODData() {
         var promise = $q(function(success, reject) {
             var promises = [] ;
-            // $http.get(urlMatriz).success(function(res) {
-            //         success(cookOD(res));
-            // });
 
             promises.push($http.get(urlMatriz));
             promises.push($http.get(urlDiccionario));
-            // $http.get(urlDiccionario).success(function(diccionario) {
-                    
-            // });
-
-
             $q.all(promises).then(recordsHandler);
             function recordsHandler(data){
-
-
-
                 success(cookOD(data[0].data,prepararDiccionario(data[1].data)));
             }
-
-
-
         });
-
-
-
         return promise;
     };
 
@@ -550,7 +631,6 @@ function DataOrigin($http, $q,LeafletServices) {
         var promise = $q(function(success, reject) {
             $http.get(urlZones).success(function(res) {
                 success(res.features);
-                //success(sortTheMotherfuckers(res,'depto'));
             });
         });
         return promise;

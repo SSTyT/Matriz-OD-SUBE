@@ -173,3 +173,49 @@ path.departamento.destination{
     stroke-linecap: square;
     stroke-opacity: 1;
 }
+
+
+//COLORS 
+
+
+
+
+path.edge,path.circle{
+    opacity:.7!important;
+    stroke-opacity: .7!important;
+}
+
+
+path.edge.colectivo{
+    stroke: rgb(104, 216, 214);
+}
+path.edge.tren{
+    stroke: rgb(22, 186, 197);;
+}
+path.edge.subte{
+    stroke: rgb(156, 234, 60);
+}
+
+
+
+
+path.edge{
+    stroke-dasharray: 2000;
+     stroke-dashoffset: 2000;
+    animation: appears 2s , dash 2s linear forwards;
+    transition-property:fill,fill-opacity,stroke,stroke-opacity;
+    transition-duration:1s; 
+}
+
+
+path.edge:hover{
+    opacity:1;
+    stroke-opacity: 1;
+}
+
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

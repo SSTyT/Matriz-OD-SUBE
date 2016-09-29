@@ -79,7 +79,8 @@ function leafletServices($timeout,$http,$q){
 	function Polygon(data,openCallBack){
 		var self = this;
 		self.style = data.style; 
-		self.centroid = get_polygon_centroid(data.geometry.geometry.coordinates[0][0]);
+		//self.centroid = get_polygon_centroid(data.geometry.geometry.coordinates[0][0]);
+		self.centroid = {lat:data.geometry.properties.y_centroid,lng:data.geometry.properties.x_centroid};
 		
 		self.id = parseInt(data.geometry.properties.depto);
 		self.polygon = L.geoJson(data.geometry,{
@@ -98,10 +99,10 @@ function leafletServices($timeout,$http,$q){
 						//.setLatLng(layer.getBounds().getCenter())
 					    .setContent('<p> '+data.geometry.properties.departamen+'<br/>  </p>');
 					
-					 layer.bindPopup(popup);
+					//layer.bindPopup(popup);
 			        layer.on('mouseover', function (e) {
 			            self.polygon.openPopup();
-			            self.polygon.bringToFront();
+			          if (service.currentPairs.length == 0 )  self.polygon.bringToFront();
 			        });
 			        
 				}
@@ -134,6 +135,7 @@ function leafletServices($timeout,$http,$q){
 
 
 		var icon = L.divIcon({
+			iconSize : [30,30],
 			className: 'polygon-marker'+data.geometry.properties.depto,
 			html:	'<div class="marker-content">'+
 						'<div class="marker-border">'+
@@ -231,8 +233,15 @@ function leafletServices($timeout,$http,$q){
 		clearPairs();
 		service.currentPairs = [] ; 
 		pairs.forEach(draw);
-		function draw(element){
-			service.currentPairs.push( L.polyline(element, {color: 'red',weight:5}).addTo(service.map));
+		function draw(element,index){
+
+			if (element.points[0] === element.points[1]){
+				var circle = L.circleMarker(element.points[0], element.style).addTo(service.map);
+				service.currentPairs.push( circle);
+			}else{	
+				var path = L.polyline(element.points, element.style).addTo(service.map);
+				service.currentPairs.push( path);	
+			}
 		}
 	}
 	
@@ -245,13 +254,14 @@ function leafletServices($timeout,$http,$q){
 	}
 
 	return {
-		initMap   : initMap,
-		getMap    : getMap,
-		getLayers : getLayers,
-		drawPoly  : drawPoly,
-		drawPath  : drawPath,
-		drawPairs : drawPairs,
-		polygons  : service.polygons
+		initMap    : initMap,
+		getMap     : getMap,
+		getLayers  : getLayers,
+		drawPoly   : drawPoly,
+		drawPath   : drawPath,
+		drawPairs  : drawPairs,
+		clearPairs : clearPairs,
+		polygons   : service.polygons
 	} ;
 
 }

@@ -68,15 +68,15 @@
 				    right: 0;
 
 				.background.tren{
-					 background:rgb(22,186,197);
+					 background:$tren-color;
 				};
 			
 				.background.colectivo{
-					background:rgb(104,216,214);
+					background:$colectivo-color;
 				}
 			
 				.background.subte{
-					background:rgb(156,234,60);
+					background:$subte-color;
 				}
 			}
 			.record-value.total{

@@ -181,23 +181,22 @@ path.departamento.destination{
 
 
 path.edge,path.circle{
-    opacity:.7!important;
-    stroke-opacity: .7!important;
+    opacity:1!important;
+    stroke-opacity:1 !important;
 }
 
-
+path.edge.white{
+    stroke: $background-color;
+}
 path.edge.colectivo{
-    stroke: rgb(104, 216, 214);
+    stroke: $colectivo-color;
 }
 path.edge.tren{
-    stroke: rgb(22, 186, 197);;
+    stroke: $tren-color;
 }
 path.edge.subte{
-    stroke: rgb(156, 234, 60);
+    stroke: $subte-color;
 }
-
-
-
 
 path.edge{
     stroke-dasharray: 2000;

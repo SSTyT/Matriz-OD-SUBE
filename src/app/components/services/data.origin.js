@@ -62,6 +62,11 @@ function DataOrigin($http, $q,LeafletServices) {
             transbordo : 10000000000 
         },
         colors:{
+            white:{
+                r:255,
+                g:255,
+                b:255
+            },
             max : {
                 r:245,
                 g:85,
@@ -78,10 +83,15 @@ function DataOrigin($http, $q,LeafletServices) {
                 b:156
             },
             tren: {
-                r:22,
-                g:186,
-                b:197
+                r:120,
+                g:120,
+                b:10
             },
+            // tren: {
+            //     r:22,
+            //     g:186,
+            //     b:197
+            // },
             colectivo: {
                 r:104,
                 g:216,
@@ -265,7 +275,7 @@ function DataOrigin($http, $q,LeafletServices) {
             var collection = this.detail.destinationSortedByID ; 
 
             var i = 0 ;
-            var top = 10 ;
+            var top = 5 ;
             var edges = [] ;
             var radiusMax = 20 ;
             var radiusMin = 15 ;
@@ -282,18 +292,26 @@ function DataOrigin($http, $q,LeafletServices) {
 
             function calcWeight(destination,totalWeight,type){
 
-                return  totalWeight * destination.porcentaje[type];
+                if (type == 'white')
+                    {return totalWeight + 6;}
+                else
+                    {return  (totalWeight * destination.porcentaje[type])/100.0;}
             }
 
             function calcOffset(destination,weigth,type){
                 var out = 0;
                 var base = -(weigth*.5);
-                if ( type == 'colectivo' ){
-                    out =  base ; 
+                //var base = 0;
+
+                if ( type == 'white' ){
+                      out =  0; 
+                }else if ( type == 'colectivo' ){
+                    out =  base + ( calcWeight(destination,weigth,'colectivo')*.5) ; 
                 }else if ( type == 'subte' ){
-                    out = base + calcWeight(destination,'colectivo') ;
+                    //out=30;
+                    out = base +( calcWeight(destination,weigth,'colectivo') +calcWeight(destination,weigth,'subte')*.5 +1);
                 }else{
-                    out = base +  calcWeight(destination,'colectivo') + calcWeight(destination,'subte');   
+                    out = base + (calcWeight(destination,weigth,'colectivo') + calcWeight(destination,weigth,'subte') +calcWeight(destination,weigth,'tren')*.5 )+1;   
                 }
 
                 return out;
@@ -321,8 +339,8 @@ function DataOrigin($http, $q,LeafletServices) {
                 }
                 return out;
             }
-            function getColor(destination){
-                var  col  =  model.colors[getTypification(destination)] ;
+            function getColor(type){
+                var  col  =  model.colors[type] ;
                 return 'rgb('+col.r+','+col.g+','+col.b+')'
             }
 
@@ -333,8 +351,8 @@ function DataOrigin($http, $q,LeafletServices) {
 
             function circleStyle(destination,total){
                 return {
-                    color: getColor(destination),
-                    fillColor: getColor(destination),
+                    color: getColor(getTypification(destination)),
+                    fillColor: getColor(getTypification(destination)),
                     fillOpacity: 0.8,
                     strokeOpacity:1,
                     radius : map(destination.total,total,radiusMin,radiusMax),
@@ -342,57 +360,54 @@ function DataOrigin($http, $q,LeafletServices) {
                 }
             }
 
-            /*unction edgeStyle(destination,color){
-                return {
-                    color: getColor(destination),
-                    fillColor: getColor(destination),
-                    fillOpacity: 1,
-                    weight: map(destination.total,total,minWeight,maxWeight),
-                    className:'edge '+getTypification(destination),
-                //    offset: Math.random()*15
-                }
-            }*/
+
 
             function edgeStyle(destination,total,type){
 
                 var totalWeight =  map(destination.total,total,minWeight,maxWeight);
-                return {
-                    color: getColor(destination),
-                    fillColor: getColor(destination),
+                var computedStyle = {
+                    color: getColor(type),
+                    fillColor: getColor(type),
                     fillOpacity: 1,
                     weight:calcWeight(destination,totalWeight,type),
-                    className:'edge '+getTypification(destination),
+                    className:'edge '+type,
                     offset: calcOffset(destination,totalWeight,type)
-                }
+                }; 
+                return  computedStyle ;
             }
-
+            var circle = '';
             while (i < top && i <  collection.length-1) {
                 var destination = LeafletServices.polygons[collection[i]].centroid ; 
                 var destination_record = this.detail.destination[collection[i]];
 
 
-
-
+           
                 //colectivo
                     //ancho = 
                 //tren
 
                 //subte
                 if (origin === destination){
-                    edges.push({
+                    
+                    circle = {
                         points:[origin,destination],
                         style:circleStyle(destination_record,total) 
-                    });
+                    }
                 }else{
-                    edges.push({
-                        points:[origin,destination],
-                        style: edgeStyle(destination_record,total,'colectivo') 
-                    }); 
+
+
+                     edges.push({points:[origin,destination],style: edgeStyle(destination_record,total,'white') }); 
+                    edges.push({points:[origin,destination],style: edgeStyle(destination_record,total,'colectivo') }); 
+                    edges.push({points:[origin,destination],style: edgeStyle(destination_record,total,'subte') }); 
+                    edges.push({points:[origin,destination],style: edgeStyle(destination_record,total,'tren') }); 
                 }
+
 
 
                 i++;
             }
+
+            edges.push(circle);
             return edges;  
         }
 

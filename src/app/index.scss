@@ -5,6 +5,16 @@
 $navbar-inverse-link-color: #5AADBB;
 $icon-font-path: "../../bootstrap-sass/assets/fonts/bootstrap/";
 
+
+//COLORES
+
+$tren-color: #b476ec;
+$subte-color: #9cea3c;
+$colectivo-color:#68d8d6;
+//$background-color:#000000;
+$background-color:#ffffff;
+
+
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
  *  sass dependencies when defined in the bower.json of your dependencies
@@ -39,16 +49,12 @@ $icon-font-path: "../../bootstrap-sass/assets/fonts/bootstrap/";
   }
 }
 
-
 html,body,ui-view{
 	width:100%;
 	height:100%;
 	margin:0;
 	padding:0;
 }
-
-
-
 
 .leaflet-tile{
 	  opacity:0;
@@ -69,10 +75,6 @@ html,body,ui-view{
  */
 // injector
 // endinjector
-
-
-
-
 
 /* entire container, keeps perspective */
 .flip-container {

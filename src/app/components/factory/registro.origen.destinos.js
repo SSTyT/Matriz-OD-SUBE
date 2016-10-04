@@ -48,7 +48,7 @@ function RegistroOrigenDestino($http,$q,Tools,LeafletServices) {
     var RegisterDetail = function (){
 
         function DestinationRegister (data){
-
+            this.id = getID(data.prov_destino,data.depto_destino);
             this.atributo = data.cantidad_as ;
             this.colectivo = data.cantidad_bus ;
             this.subte = data.cantidad_subte ;
@@ -56,14 +56,16 @@ function RegistroOrigenDestino($http,$q,Tools,LeafletServices) {
             this.tren = data.cantidad_tren ;
             this.total =  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;
             this.departamento = parseInt(data.depto_destino);
-            
+            this.hour = new HourRegister();
+
             this.add = function (data){
                 this.atributo += data.cantidad_as ;
                 this.colectivo += data.cantidad_bus ;
                 this.subte += data.cantidad_subte ;
                 this.transbordo += data.cantidad_transbordo ;
                 this.tren += data.cantidad_tren ;
-                this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ;    
+                this.total +=  data.cantidad_bus + data.cantidad_subte + data.cantidad_tren ; 
+                this.hour.update(data);   
                 this.updatePorcentajes() ;           
             };
 
@@ -109,21 +111,14 @@ function RegistroOrigenDestino($http,$q,Tools,LeafletServices) {
         this.departamento = data.depto_origen ;
         this.id = getID(data.prov_origen,data.depto_origen) ; 
         this.nombre = diccionario[this.id].lbl ; 
-       // this.hora_incio = data.hora_incio ;
-       // this.pobl2010_destino = data.pobl2010_destino ;
-       // this.pobl2010_origen = data.pobl2010_origen ;
-       // this.prov_destino = data.prov_destino ;
+
         this.provincia = data.prov_origen ;
         this.total =  data.cantidad_bus+data.cantidad_subte +data.cantidad_tren;
         this.total_porcentaje = 0 ;
 
-        //this.detail = [] ; 
-        //this.detail.push(data);
         this.style = {};
         this.detail = new RegisterDetail();
         this.hour = new HourRegister();
-        // this.destinations = [] ;
-        // this.destinations[data.depto_destino] = 0 ;
 
         this.porcentaje = {
             colectivo : 0,
@@ -131,25 +126,22 @@ function RegistroOrigenDestino($http,$q,Tools,LeafletServices) {
             tren : 0,
             transbordo: 0,
             atributo: 0,
-
         };
+
         this.updatePorcentajes = function (){
             this.porcentaje.tren = ((this.tren*100)/this.total);
             this.porcentaje.colectivo = ((this.colectivo*100)/this.total);
             this.porcentaje.subte = ((this.subte*100)/this.total);
         };
-        //this.updatePorcentajes();
+
         this.add = function (data){
             this.atributo += data.cantidad_as ;
             this.colectivo += data.cantidad_bus ;
             this.subte += data.cantidad_subte ;
             this.transbordo += data.cantidad_transbordo ;
             this.tren += data.cantidad_tren ;
-            //this.detail.push(data);
             this.total += data.cantidad_bus+data.cantidad_subte +data.cantidad_tren ;
-            //this.destinations[data.depto_destino] =  0 ;
             this.updatePorcentajes();
-
             this.detail.update(data);
             this.hour.update(data);
 

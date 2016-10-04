@@ -126,44 +126,20 @@
                 $scope.model = data ; 
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       this.open = function (id){
-        console.log("Open the mother fucker !!!" + id);
+        console.log("Open ID:" + id);
         $scope.showDetail = true;
         $scope.current.record = DataOrigin.record[id];
         $scope.leftPanel.setDetail(DataOrigin.record[id]);
         $scope.rightPanel.setList();
         console.log( $scope.current);
         $scope.current.record.highlight();
-        //show origin zone at left
-        //show destination zones at right panel
-        //highlight poligons
+
       };
 
       this.close = function (){
         $scope.showDetail = false;
         $scope.current.record.unHighlight();
-      //hide left pannel content
-      //hide right pannel content
-      //normalize highlited zones
     };
 
 

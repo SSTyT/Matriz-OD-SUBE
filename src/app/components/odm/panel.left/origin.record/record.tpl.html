@@ -2,9 +2,9 @@
 	<!-- <div class='clickOverlay'  ng-mouseover="$ctrl.record.highlight()" ng-mouseleave="$ctrl.record.unHighlight($ctrl.record.departamento,vm.current)"  ng-click="vm.open($ctrl.record.departamento)"></div> -->
 	<div class='departures'>
 		<span class='department'  ng-style={background:$ctrl.record.style.color} ng-mouseover="$ctrl.record.highlight()" ng-mouseleave="$ctrl.record.unHighlight()" >
-			<div class="id-wrapper" ng-click="$ctrl.odm.open($ctrl.record.departamento)">
+			<div class="id-wrapper" ng-click="$ctrl.odm.open($ctrl.record.id)">
 				<div class="id-border">
-					{{$ctrl.record.departamento}}
+					{{$ctrl.record.id}}
 				</div>
 			</div>
 <!-- 			<div class="ver"  ng-click="$ctrl.vm.open($ctrl.record.departamento)">

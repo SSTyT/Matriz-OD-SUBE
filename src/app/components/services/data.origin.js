@@ -95,7 +95,7 @@ function DataOrigin($http, $q,Tools,RegistroOrigenDestino) {
             model.totales.tren += element.tren;
             model.totales.total += element.total;
         }
-
+      
         model.matriz.forEach(recorrer);
 
         function storeMax(key,element){
@@ -112,7 +112,6 @@ function DataOrigin($http, $q,Tools,RegistroOrigenDestino) {
 
         function recorrer(element,index){
             element.total_porcentaje = (element.total*100)/model.totales.total;
-
             storeMax('total',element);
             storeMax('subte',element);
             storeMax('colectivo',element);
@@ -146,27 +145,23 @@ function DataOrigin($http, $q,Tools,RegistroOrigenDestino) {
         model.matriz.forEach(paintRecord);
 
         function calcTotalColor(param,min,max){
-            var lower,upper,r,g,b = 0 ;
-            
-            var module = max - min / 57; 
-
-             if( param <= max*.5){
-                r = parseInt((param/module).map(min/module,(max-min)/module,colors.min.r,colors.med.r));
-                g = parseInt((param/module).map(min/module,(max-min)/module,colors.min.g,colors.med.g));
-                b = parseInt((param/module).map(min/module,(max-min)/module,colors.min.b,colors.med.b));
-            }else{
-                r = parseInt((param/module).map(min/module,(max-min)/module,colors.med.r,colors.max.r));
-                g = parseInt((param/module).map(min/module,(max-min)/module,colors.med.g,colors.max.g));
-                b = parseInt((param/module).map(min/module,(max-min)/module,colors.med.b,colors.max.b));
-            }
+            var r,g,b = 0 ;    
+            r = parseInt(param.map(min,max,colors.min.r,colors.max.r));
+            g = parseInt(param.map(min,max,colors.min.g,colors.max.g));
+            b = parseInt(param.map(min,max,colors.min.b,colors.max.b));
+       
             return 'rgb('+r+','+g+','+b+')';
         }
 
         function paintRecord(element,index){
 
+            var modulo = model.max.total / 10 ;
+
+
             element.style = {
                 weight: 2,
-                color: calcTotalColor(element.total,0,model.max.total),
+                color: calcTotalColor(element.total/modulo,0,10),
+                //color: calcTotalColor(element.total,0,model.max.total),
                 fillOpacity: 0.95,
                 strokeOpacity:1,
                 stroke:'red'
@@ -191,9 +186,11 @@ function DataOrigin($http, $q,Tools,RegistroOrigenDestino) {
             };
 
             function pintarDestinos(element,index){
+
+                  var modulo = totalDestinos / 10 ;
                 element.style = {
                     weight: 2,
-                    color: calcTotalColor(element.total,0,totalDestinos),
+                    color: calcTotalColor(element.total/modulo,0,10),
                     fillOpacity: 0.85,
                     strokeOpacity:1
                 };
@@ -215,7 +212,6 @@ function DataOrigin($http, $q,Tools,RegistroOrigenDestino) {
             return b.total - a.total ;
         }
 
-        console.log(model);
         Tools.setModel ( model);
         return model ; 
     };

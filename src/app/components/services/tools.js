@@ -21,9 +21,10 @@ function Tools($http, $q) {
     function setModel(model){
        this. model = model;
     }
-  function getModel(){
-    return this.model;
-  }
+
+    function getModel(){
+        return this.model;
+      }
 
     var colors = {
         white:{

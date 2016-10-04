@@ -6,6 +6,7 @@
 	<div class="panel-line"></div>
 	<ul class="origin-list">
 		<li ng-if="model.matriz.length==0">CARGANDO</li>
+		
 		<li class="origin-item-wrapper" ng-repeat="record in model.matriz track by $index" >
 			<od-record id="{{record.departamento}}" value="{{record.depto}}" record="record" model="model" odm="odm"></od-record>
 		</li>

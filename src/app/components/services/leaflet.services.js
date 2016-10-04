@@ -1,24 +1,14 @@
-angular.module('matrizOdSube').factory('LeafletServices', ['$timeout','$http','$q' , leafletServices]);
+angular.module('matrizOdSube').factory('LeafletServices', ['$timeout','$http','$q' ,'Tools', leafletServices]);
 
-function leafletServices($timeout,$http,$q){
+function leafletServices($timeout,$http,$q,Tools){
 	service = this ;
 	service.OSM;
 	service.map;
 	service.polygons = [] ;
-	service.currentPairs = [] ;
-	service.highlightStyle = {
-		origin : {
-			color: 'rgb(0,0,0)',
-			opacity: 1 ,
-			weight: 5 
-		},
-		destination : {
-		color: 'rgb(128,128,128)',
-		opacity: 1 ,
-		weight: 2 
-		}
-	};
+	service.currentEdges = [] ;
 
+
+	var getID = Tools.getID ; 
 
 
 	function getMap(){
@@ -28,26 +18,6 @@ function leafletServices($timeout,$http,$q){
 	function getLayers(){
 		return service.OSM;
 	}
-
-	function get_polygon_centroid(pts) {
-	   var first = pts[0], last = pts[pts.length-1];
-	   if (first[0] != last[0] || first[1] != last[1]) pts.push(first);
-	   var twicearea=0,
-	   x=0, y=0,
-	   nPts = pts.length,
-	   p1, p2, f;
-	   for ( var i=0, j=nPts-1 ; i<nPts ; j=i++ ) {
-	      p1 = pts[i]; p2 = pts[j];
-	      f = p1[0]*p2[1] - p2[0]*p1[1];
-	      twicearea += f;          
-	      x += ( p1[0] + p2[0] ) * f;
-	      y += ( p1[1] + p2[1] ) * f;
-	   }
-	   f = twicearea * 3;
-	   return { lng:x/f, lat:y/f };
-	}
-
-
 
 	function initMap(data){
 
@@ -82,7 +52,7 @@ function leafletServices($timeout,$http,$q){
 		//self.centroid = get_polygon_centroid(data.geometry.geometry.coordinates[0][0]);
 		self.centroid = {lat:data.geometry.properties.y_centroid,lng:data.geometry.properties.x_centroid};
 		
-		self.id = parseInt(data.geometry.properties.depto);
+		self.id =  getID(data.geometry.properties.prov,data.geometry.properties.depto);
 		self.polygon = L.geoJson(data.geometry,{
 			style:self.style,
 		 	className:data.geometry.properties.depto+" departamento animated",
@@ -91,7 +61,7 @@ function leafletServices($timeout,$http,$q){
 			     	function clickHandler(event){		
 			     	 	 event.originalEvent.preventDefault();
 			        	console.log(feature.properties);
-			        	openCallBack(parseInt(data.geometry.properties.depto));
+			        	openCallBack(self.id);
 			      	}
 
 					var popup = L.popup()
@@ -102,7 +72,7 @@ function leafletServices($timeout,$http,$q){
 					//layer.bindPopup(popup);
 			        layer.on('mouseover', function (e) {
 			            self.polygon.openPopup();
-			          if (service.currentPairs.length == 0 )  self.polygon.bringToFront();
+			          if (service.currentEdges.length == 0 )  self.polygon.bringToFront();
 			        });
 			        
 				}
@@ -139,7 +109,7 @@ function leafletServices($timeout,$http,$q){
 			className: 'polygon-marker'+data.geometry.properties.depto,
 			html:	'<div class="marker-content">'+
 						'<div class="marker-border">'+
-							parseInt(data.geometry.properties.depto)+
+							self.id+
 						'</div>'+
 					'<div>'
 		});
@@ -147,7 +117,7 @@ function leafletServices($timeout,$http,$q){
 			className: 'polygon-marker '+data.geometry.properties.depto,
 			html:	'<div class="marker-content-tiny">'+
 						'<div class="marker-border">'+
-							parseInt(data.geometry.properties.depto)+
+							self.id+
 						'</div>'+
 					'<div>'
 		});
@@ -191,38 +161,15 @@ function leafletServices($timeout,$http,$q){
 			//self.marker.setIcon(icon);
 		}
 
-		function getUpperPoint(data){
-
-			var out = [0,0] ;
-			data.geometry.coordinates[0][0].forEach(findAnchor);
-
-			function findAnchor(element,index){
-				//console.log(element);
-				if (out[0] > element[0]){
-					out = element ;
-				}
-			}
-
-			return out;
-		}
-
 	}
 
 	function drawPoly(data,openCallBack){
-		
-		service.polygons[parseInt(data.geometry.properties.depto)] = new Polygon(data,openCallBack) ;
 
-		//console.log("polygon: "+ data.geometry.properties.depto+ "    added");
- 		//L.circleMarker(polygon.getBounds().getCenter()).bindLabel( data.properties, {noHide:true}).addTo(service.map);
-		//polygon.bindLabel()
-		 //label = new L.Label(data.geometry.properties.depto).addTo(service.map);
-		// label.setContent(data.geometry.properties.depto);
-		// label.setLatLng(polygon.getBounds().getCenter());
-		// map.showLabel(label);
+		service.polygons[getID(data.geometry.properties.prov,data.geometry.properties.depto)] = new Polygon(data,openCallBack) ;
 	}
 
 	function clearPairs(){
-		service.currentPairs.forEach(cleanCurrent);
+		service.currentEdges.forEach(cleanCurrent);
 
 		function cleanCurrent(element){
 			service.map.removeLayer(element)
@@ -231,16 +178,16 @@ function leafletServices($timeout,$http,$q){
 
 	function drawPairs(pairs){
 		clearPairs();
-		service.currentPairs = [] ; 
+		service.currentEdges = [] ; 
 		pairs.forEach(draw);
 		function draw(element,index){
 
 			if (element.points[0] === element.points[1]){
 				var circle = L.circleMarker(element.points[0], element.style).addTo(service.map);
-				service.currentPairs.push( circle);
+				service.currentEdges.push( circle);
 			}else{	
 				var path = L.polyline(element.points, element.style).addTo(service.map);
-				service.currentPairs.push( path);	
+				service.currentEdges.push( path);	
 			}
 		}
 	}

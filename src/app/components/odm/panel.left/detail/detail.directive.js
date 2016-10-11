@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('matrizOdSube').directive('originDetail', ['$timeout', originDetail]);
+angular.module('matrizOdSube').directive('originDetail', ['$timeout','Tools', originDetail]);
 
-function originDetail($timeout) {
+function originDetail($timeout,Tools) {
     // Runs during compile
     console.log("directive originDetail compiled");
     return {
@@ -18,7 +18,7 @@ function originDetail($timeout) {
 
             $scope.current.options.viajes =  {
                 chart: {
-                    color: ['rgb(22,186,197)','rgb(104,216,214)','rgb(156,234,60)'],
+                    color: [Tools.getColor('tren'),Tools.getColor('colectivo'),Tools.getColor('subte')],
                     type: 'pieChart',
                     height:150,
                     width:300,
@@ -85,12 +85,13 @@ function originDetail($timeout) {
 
             $scope.current.options.horas = {
                 chart: {
-                        color: ['rgb(22,186,197)','rgb(104,216,214)','rgb(156,234,60)'],
+                        color: [Tools.getColor('tren'),Tools.getColor('colectivo'),Tools.getColor('subte')],
                     type: 'multiBarChart',
-                    height: 150,
+                    height: 250,
+                    width:350,
                     margin : {
                         top: 20,
-                        right: 20,
+                        right: 0,
                         bottom: 45,
                         left: 45
                     },
@@ -99,7 +100,7 @@ function originDetail($timeout) {
                     duration: 500,
                     stacked: true,
                     xAxis: {
-                        axisLabel: 'Horas ()',
+                        axisLabel: 'Horas',
                         showMaxMin: false,
                         tickFormat: function(d){
                             return d3.format(',f')(d);
@@ -107,7 +108,7 @@ function originDetail($timeout) {
                     },
                     yAxis: {
                         axisLabel: 'Viajes',
-                        axisLabelDistance: -20,
+                        axisLabelDistance: -30,
                         tickFormat: function(d){
                             return d3.format(',.1f')(d);
                         }

@@ -87,9 +87,10 @@
 
 //marker ! 
 .marker-content{
-	color: #1D1C1A;
-    background: #FDD306;
+	color: $font-color ;
+    background: $origin-color ;
 	//border:black 1px solid ;
+    font-size: 10px;
 	width:30px;
 	height:30px;
 	border-radius:30px;
@@ -200,7 +201,7 @@ path.edge.subte{
 
 path.edge{
     stroke-dasharray: 2000;
-     stroke-dashoffset: 2000;
+    stroke-dashoffset: 2000;
     animation: appears 2s , dash 2s linear forwards;
     transition-property:fill,fill-opacity,stroke,stroke-opacity;
     transition-duration:1s; 

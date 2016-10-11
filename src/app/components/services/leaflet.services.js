@@ -37,7 +37,6 @@ function leafletServices($timeout,$http,$q,Tools){
 
             service.map.on("zoomend", function () {
        			service.polygons.forEach( function(element, index) {
-       			
        				element.restoreIcon()
        			});
             });
@@ -113,6 +112,17 @@ function leafletServices($timeout,$http,$q,Tools){
 						'</div>'+
 					'<div>'
 		});
+
+		var iconDestino = L.divIcon({
+			iconSize : [30,30],
+			className: 'polygon-marker destino'+data.geometry.properties.depto,
+			html:	'<div class="marker-content">'+
+						'<div class="marker-border">'+
+							self.id+
+						'</div>'+
+					'<div>'
+		});
+		
 		var tinyIcon = L.divIcon({
 			className: 'polygon-marker '+data.geometry.properties.depto,
 			html:	'<div class="marker-content-tiny">'+

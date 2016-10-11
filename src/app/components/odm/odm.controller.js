@@ -3,7 +3,8 @@
 
   angular
     .module('matrizOdSube')
-    .controller('ODMController', ['$scope','$timeout','$q','LeafletServices','DataOrigin','Tools',ODMController]);
+    .controller('ODMController', ['$scope','$timeout','$q','LeafletServices','DataOrigin','Tools',ODMController])
+;
 
   /** @ngInject */
   function ODMController($scope,$timeout,$q,LeafletServices ,DataOrigin , Tools) {
@@ -57,7 +58,7 @@
                     },
                     500)
                 ).then(function(){
-                    $scope.loadingApp = false ;
+                   // $scope.loadingApp = false ;
                 });
 
             });
@@ -106,7 +107,10 @@
             }
 
             function drawPolygons(data){
+                
+               
                 data.forEach(pintar);
+
                 function pintar(e,i){
                     $timeout(function(){
                         LeafletServices.drawPoly({
@@ -116,8 +120,13 @@
                             $scope.vm.open(id);
                             $scope.$apply();
                         });
-                    },20*i);
 
+
+                        if(i == data.length -1 ){
+                            $scope.loadingApp = false ;
+                        }
+
+                    },20*i);
                 }
             }
 

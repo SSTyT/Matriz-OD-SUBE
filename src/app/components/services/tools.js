@@ -48,9 +48,9 @@ function Tools($http, $q) {
             b:156
         },
         tren: {
-            r:120,
-            g:120,
-            b:10
+            r:194,
+            g:140,
+            b:243
         },
         colectivo: {
             r:104,
@@ -75,13 +75,15 @@ function Tools($http, $q) {
         
     };
 
- 
+ function getColor(id){
+    return 'rgb('+colors[id].r+','+colors[id].g+','+colors[id].b+')';
+ }
 
     return  {
         setModel:setModel,
         getModel:getModel,
-
         colors:colors,
+        getColor:getColor,
         getID : getID
         };
 }

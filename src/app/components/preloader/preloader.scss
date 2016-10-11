@@ -20,7 +20,10 @@
 		align-items:center;
 		justify-content:center;
 
-		.preloader{}
+		.preloader{
+			font-size: 3em;
+    		letter-spacing: 13px;
+		}
 	}
 
 	&.active{

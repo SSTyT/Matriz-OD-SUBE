@@ -13,15 +13,15 @@ var odRecord = {
     };
 
 angular.module('matrizOdSube').component('odRecord',odRecord);
-angular.module('matrizOdSube').controller('odRecordController', ['$timeout','$scope',odRecordController]);
-function odRecordController ($timeout,$scope){
+angular.module('matrizOdSube').controller('odRecordController', ['$timeout','$scope','intFilter',odRecordController]);
+function odRecordController ($timeout,$scope,intFilter){
     this.show = "Total: " + this.record.total+" viajes ";
     this.hover = function(field){
         console.log("call me ");
         console.log($scope);
 
         if (field == 'total'){
-              this.show = field+" " + this.record[field]+" viajes ";
+              this.show = field+" " + intFilter(this.record[field])+" viajes ";
         }else{
 
             this.show = field+" " + this.record.porcentaje[field].toFixed(1)+" %";

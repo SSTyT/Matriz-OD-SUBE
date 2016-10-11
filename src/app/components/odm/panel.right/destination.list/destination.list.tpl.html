@@ -3,7 +3,9 @@
         <div class="panel-title">DESTINOS: {{rightPanel.list.length}}</div>
         <div class="panel-line"></div>      
         <ul class="destination-list">
+         <div > TOP 5</div>
             <li class="destination-item" ng-repeat="record in rightPanel.list  track by $index" ng-mouseover="destination.highlight()" ng-mouseleave="destination.unHighlight()">
+                <div ng-if="$index == 5"> <br></div>
                 <destination-record  ></destination-record>
             </li>
         </ul>

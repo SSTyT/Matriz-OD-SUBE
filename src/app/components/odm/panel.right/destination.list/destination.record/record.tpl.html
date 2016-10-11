@@ -2,25 +2,30 @@
 			<!-- <div class='clickOverlay'  ng-mouseover="record.highlight()" ng-mouseleave="record.unHighlight()"  ng-click="vm.open(record.departamento)"></div> -->
 	<div class='departures'>
 		<div>{{record.nombre}}</div>
-		<span class='department'>
-			<div  ng-style={background:record.style.color}>
+		<span class='department' ng-style={background:record.style.color}>
+			<div class="id-wrapper"  >
+
+
+						<div class="id-border">
 				{{record.id}}
+				</div>
 			</div>
 			<div class="action">
 				<div  class=total ng-style={background:record.style.color}>
-					{{record.total}}
+	
 				</div>
 			</div>
 		</span>
 		<span class='resume'>
 			<div class="record-value" ng-style={background:record.style.color}>
-				<div class='background'  >
-					<div> Colectivos {{record.porcentaje.colectivo}} %</div>
-					<div> Tren {{record.porcentaje.tren}} %</div>
-					<div> Subte {{record.porcentaje.subte}} %</div>
+				<div class=''  >
+					<div class='value colectivo'> Colectivos {{record.porcentaje.colectivo}} %</div>
+					<div class='value tren'> Tren {{record.porcentaje.tren}} %</div>
+					<div class='value subte'> Subte {{record.porcentaje.subte}} %</div>
 				</div>
 			</div>
 			<div class="record-graph">
+				<div class="total">{{record.total}}</div>
 				<div class='background colectivo'  ng-style="{width:record.porcentaje.colectivo+'%'}">
 				</div>
 				<div class='background tren' ng-style="{width:record.porcentaje.tren+'%'}">
